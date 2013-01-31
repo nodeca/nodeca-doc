@@ -1,0 +1,78 @@
+@import 'variables.styl'
+@import 'normalize.styl'
+@import 'type.styl'
+@import 'highlight.styl'
+
+@import 'nib'
+
+html
+body
+  height 100%
+
+body
+  margin 0
+  font-family baseFontFamily
+  font-size baseFontSize
+  line-height baseLineHeight
+  color textColor
+  background-color white
+
+.sidebar
+  top: 0;
+  bottom 0
+  left 0
+  overflow hidden
+  position fixed
+  width: 200px;
+
+  padding: 25px 0 0
+  margin: 0
+  list-style: none
+  overflow-x: hidden
+  overflow-y: auto
+
+  .active a
+    font-weight: bold
+
+  a
+    padding 3px 5px 3px 20px
+    color textColor
+    display: block
+    text-decoration none
+    white-space nowrap
+
+.content
+  max-width 800px
+  margin-left 200px
+  padding 10px 0 10px 40px
+  box-sizing border-box
+  min-height 100%
+
+  box-shadow: -4px 0 4px -4px #ccc;
+
+  a
+    color linkColor
+    text-decoration none
+    border-bottom: 1px solid grayLight
+
+  a:hover
+    color linkColorHover
+    border-color linkColorHover
+
+// <code> blocks
+//
+pre
+  white-space wrap
+  code
+    overflow auto
+    border 1px solid grayLightest
+    box-shadow 0 0 5px grayLightest
+    border-radius 5px
+    margin 1.5em 0
+// Inline <code>
+p, li
+  code
+    background-color: grayLightest
+    border-radius: 3px
+    padding: 0 3px
+

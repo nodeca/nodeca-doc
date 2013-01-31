@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= @getPreparedTitle() %></title>
+  <meta charset="utf-8">
+  <%- @getBlock("meta").toHTML() %>
+  <%- @getBlock("styles").add(["./styles/style.css"]).toHTML() %>
+</head>
+<body>
+  <ul class='sidebar'>
+    <% for page in @getCollection("pages").toJSON(): %>
+      <li class="<%= if page.id is @document.id then 'active' else 'inactive' %>">
+        <a href=".<%= page.url %>"><%= page.title %></a>
+      </li>
+    <% end %>
+  </ul>
+  <div class="content">
+    <div class="page-header">
+      <h1><%= @document.title %></h1>
+    </div>
+    <%- @content %>
+    <%- @getBlock("scripts").add(["./vendor/jquery.js","./scripts/script.js"]).toHTML() %>
+  </div>
+</body>
+</html>
