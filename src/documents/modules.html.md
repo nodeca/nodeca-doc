@@ -28,7 +28,7 @@ We support extentions for jade / stylus / i18n, to simplify resource include:
   - `@/path` - from the root of current package
   - `@package/path` - from the root of foreign package
 - i18n names are always relative to current module, by default
-- on client code, `require` automaticcaly bundle code. bundle.yml can define
+- on client code, `require` automatically bundle code. bundle.yml can define
   location of bundled module
 
 Helpers:
