@@ -42,26 +42,25 @@ Directores below are processed automaticallty during init.
 └─ index.js
 ```
 
-**NOTE**. If you wish to hide some files from autoloading, stars their name with
-underscore `_`. If you name directory with leading `_`, it's content will be
-excluded from scan. That can be convenient, if you write complex models, server
-methods, and others.
+**NOTE**. You can exclude files or directories from autoloading, if start its
+name with underscore `_`. That can be convenient, if you like to split one big
+file to submodules.
 
 
 Namespaces
 ----------
 
-We use namespaces, to separate application resources. Also, those can be used to
-cut loading bundled resources. For example users do not need admin templates and
-translations.
+We use namespaces, to separate application resources. For example users do not
+need admin templates and translations.
 
 
 Packages & Bundles
 ------------------
 
 Different types of resources are organised into `packages`. Each package defines
-sources locations, that should be scanned & loaded on start. Clientside code &
-css are packed into bundles for effective load.
+sources locations, that should be scanned, compiled & loaded on start. Packages
+are combined into bundles. You can place all packages in single bundle, or split
+to multiple ones, to optimize loading time.
 
 Every app has `bundle.yml` in the root, that defines all available resources and
 bundling rules.

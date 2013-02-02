@@ -87,6 +87,7 @@ module.exports.run = function (N, args, callback) {
 
       /* Do things here */
 
+      callback();
     }
   );
 };

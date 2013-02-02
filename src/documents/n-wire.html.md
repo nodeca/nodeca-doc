@@ -4,13 +4,12 @@ isPage: true
 order: 70
 ---
 
-The special object
 [N.wire](https://github.com/nodeca/nodeca.core/blob/master/lib/system/wire.js),
-that combine features of 'mediator' AND 'chain of responsibility'. You can
+combines features of 'mediator' AND 'chain of responsibility'. You can
 consider it as pool of chains, or as mediator with weighted subscribers.
 
-**NOTE** We consider handler with zero priority as "main". Others are considered
-as before/after filters (can be extended via hooks). 
+**NOTE**. By convention, handler with zero priority as "main". Others
+are considered as before/after filters (can be extended via hooks). 
 
 Known channels:
 
@@ -114,11 +113,12 @@ disable session & cookies handlers on static server responder.
 
 ### Wire.has(channel)
 
-Returns if `channel` has at least one subscriber with zero priority. Used
-by router, to check if server method exits. Filters can be added by externals
-applications, but we should not use chain without "main" method.
+Returns if `channel` has at least one subscriber with zero priority (main
+handler, by convention). Used by router, to check if server method exits.
+Filters can be added by externals applications, but we should not use chain
+without "main" method.
 
 
 ### Wire.stat()
 
-Wire statistics (channels, handlers, counters).
+Bus statistics (channels, handlers, counters).

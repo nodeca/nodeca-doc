@@ -9,7 +9,7 @@ There are 2 ways to  call server methods
 1. Via http GET requests, if router has matching rule
 2. Via `N.io.rpc` call from client JS (that's special POST-request)
 
-Data flow is almost the same. With only 2 differences:
+Data flow is almost the same, with only 2 differences:
 
 - RPC data is not rendered, and returned as JSON
 - low-level request info is located in `env.origin.rpc` or `env.origin.http`
@@ -52,7 +52,7 @@ return;
 Adding cache support
 --------------------
 
-By default, no cache exists, except static/assets servers. But you can extend
+By default, no cache exists, except for static/assets servers. But you can extend
 support for some responders, to improve performance.
 
 
@@ -64,13 +64,9 @@ Those MUST have unique name for each unique content. Then we set
 Cache-Control: public, maxage=31536000
 Vary: Accept-Encoding (for compressable data)
 ETag: xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Last-Modified: yyyyyyyy
 ```
 
-**Be careful** with `Last-Modified` in clustered enviroment, if those relies
-on file dates.
-
-N.B. Check if `Last-Modified` can be safely skipped
+**NOTE**. In clustered enviroment, file date should not be used to calculate ETag.
 
 
 ### Cache dynamic data
@@ -88,16 +84,11 @@ ETag: [contend_id]-[user_id]-[lang_id]-[theme_id]
 * NEVER use `Expires` - it can fuckup user difference, if behind HTTP/1.0 cache.
 
 Renderer checks if `env.response.headers['ETag']` === 
-env.http.req.headers['if-none-match']`, and skip rendering phase if necessary.
+`env.http.req.headers['if-none-match']`, and skip rendering phase if necessary.
 But it's still your responsibility to fill `ETag` & `Cache-Control` fields.
 
-Notes:
-
-* For persistent objects, it's good idea to use random number as etag, and
-  update it on any object change. Or use update timestamp as etag.
-* Page content can depend on user avatars. It's not correct to cache such pages
-  more than several days (to avoid VERY complex dependencies) (but we still can
-  safely cache those pages for guests)
+**NOTE** Page content can depend on user avatars. It's not correct to cache such
+pages more than several days (to avoid VERY complex dependencies).
 
 
 ### Cache 404, 410 pages

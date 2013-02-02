@@ -23,10 +23,10 @@ We process resources in 2 steps (both are not mandatory):
 1. Scan folders in deep (for JS/CSS/templates) & process tree
 2. Wrap result with main files (with [mincer](https://github.com/nodeca/mincer))
 
-That helps to combine application modules with external 'old-style' librarues
-(jquery, twitter bootstrap, and others)
+That helps to combine application modules with external 'old-style' libraries
+(jquery, twitter bootstrap, and others).
 
-**NOTE**. We CAN'T guarantee order of JS/CSS if app modules. Only for wraper.
+**NOTE**. We CAN'T guarantee order of JS/CSS for client modules. Only for wraper.
 But we have lazy-coupling event-driven init & [BEM](http://bem.info/)-style
 notation for CSS. That prevents possible conflicts.
 
@@ -45,7 +45,7 @@ To load resources fast, we need to minimaze file count on the client. So,
 we join multiple resources & packages into single CSS/JS files.
 
 Currently, we have `frontend` & `backend` bundles. Also, separate bundle will
-be available for heavy WISYWIG editors, not required on first load.
+be available for heavy WISYWIG editor, that's not required on first load.
 
 
 Bundler config example
@@ -53,7 +53,7 @@ Bundler config example
 
 That's a real file from `nodeca.core` application.
 
-```
+``` none
 bundles:
   frontend:
     - lib

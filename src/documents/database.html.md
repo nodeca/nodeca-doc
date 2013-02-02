@@ -47,17 +47,16 @@ Seeds
 ### Usage (CLI)
 
 ``` bash
-$ ./nodeca.js seed             # list available seeds, with numbers
-$ ./nodeca.js seed -n XXX      # apply seed by number
+$ ./nodeca.js seed             # list available seeds, with id
+$ ./nodeca.js seed -n XXX      # apply seed by id
 $ ./nodeca.js seed -h          # show help about other options
 ```
 
 ### API
 
-Seed API is similar to migrations, but more simple.
-
-All seeds are placed in `./db/seeds` folder, one seed in each *.js file. Each
-file exports async function, that applies seed.
+Seed API is similar to migrations, but more simple. All seeds are placed in
+`./db/seeds` folder, one seed in each *.js file. Each file exports async
+function, that applies seed.
 
 **NOTE**. Loading seeds is limited to development/test enviroment. If you really
 need to run seed on production/staging, you must use option -f (--force)
@@ -67,7 +66,7 @@ Data snapshots
 --------------
 
 There are couple of development scripts, to quickly switch between data states,
-when you actively change DB
+when you actively change DB.
 
 ``` bash
 $ ./bin/db-dump <snapshot-id>    # make snapshot with given id into `./tmp`

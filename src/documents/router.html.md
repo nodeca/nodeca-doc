@@ -7,17 +7,16 @@ order: 110
 
 For server and client purposes we use [Pointer][Pointer] router.
 Routes are described in YAML and bundled into main api tree file as
-`nodeca.config.router` after init. Router instanse is accessible as
-`nodeca.runtime.router`.
+`N.config.router` after init. Router instanse is accessible as
+`N.runtime.router`.
 
-Router config for the client is kept under `nodeca.runtime.client_routes`.
+Router config for the client is kept under `N.runtime.client_routes`.
 
 ## Application Routes
 
 Application routes are defined in `router.map` section of config files:
 
-```
----
+``` none
 router:
   map:
     forums.list:
@@ -52,29 +51,29 @@ router:
         tab: /general|last-msgs/
 ```
 
-**NOTICE**
-Routes with leading `#` are used by clients ONLY.
-*Not implemented yet*
+**NOTICE**. Routes with leading `#` are used by clients ONLY.
+__Not implemented yet__
+
+**SECURITY WARNING**. NEVER make routes, that change application state.
+Such actions should go via rpc, that has CSRF protection. 
 
 
 ### Route Params Options
 
-OPTIONAL.
+Optional:
 
-Parameters rules hash of key => rules.
-Each rule might be either `String` or `Object` that consist of fields:
+- **match** (Optional) Rule to match value of param, `Array` or `RegExp`.
+- **default** (Optional) Default value of param.
 
-    - **match** (Optional) Rule to match value of param, `Array` or `RegExp`.
-    - **default** (Optional) Default value of param.
-
-See [Pointer][Pointer-Route] `new Route` documentation of `params` options.
+See example above and [Pointer][Pointer-Route] `new Route` documentation
+of `params` options.
 
 
 ### Slugs
 
 Routes can contain slugs. Technically, that's usual optional params.
 
-```
+``` none
 router:
   map:
     faq.post.show:
@@ -83,7 +82,7 @@ router:
 
 The route above will match any of the following URLs:
 
-```
+``` none
 /qa/123.html
 /qa/123-pochemu-krokodil-zelyoni.html
 /qa/animals/123-pochemu-krokodil-zelyoni.html
@@ -96,14 +95,14 @@ idea to cache full url (or md5) - to avoid recalculations on every request.
 
 ## Direct Invocators
 
-Sometimes we want API methods to be accessible via direct HTTP links and browser
+Sometime we like API methods to be accessible via direct HTTP links and browser
 history. For this purpose we use *direct invocator* rule which looks like:
 
 `/!{methodname}?param1=val1&...&paramN=valN`
 
 Technically, such link will run page loader first, then update page inline.
 
-```
+``` none
 ---
 router:
   direct_invocators:
@@ -113,10 +112,10 @@ router:
 
 **CAUTION**. NEVER give direct access to methods, that posts data. That will
 cause CSRF vulnerability. **ONCE AGAIN**. Only give direct access to "read"
-methods, with will not modify data. Posting should be done ONLY via realtime
+methods, that will not modify data. Posting should be done ONLY via rpc
 call, when user click on links, buttons, and so on. 
 
-**NOTICE** Before dispatching "direct" invocator, we try to find appropriate
+**NOTICE**. Before dispatching "direct" invocator, we try to find appropriate
 "SEO" route for it, and if exists - redirect there with 301 code.
 Here is algorithm, how to find "appropriate" URL:
 
@@ -138,7 +137,7 @@ Notice third decision. Unfortunately we are not able to guess automatically this
 situation, so instead we can become more verbose, and rewrite our first route
 rule as:
 
-```
+``` none
 router:
   map:
     forums.list:
@@ -159,7 +158,7 @@ application-level config. Any config object can have special key
 `~override: true`. When such key found, branches from other configs will be
 wiped. Without this key, objects are reqursively merged.
 
-```
+``` none
 router:
   map:
     forums.list:
@@ -223,7 +222,7 @@ bind:
 ```
 
 You may also want to use stunnel for HTTPS while running nodeca application in
-normal mode, for this purposes you MUST not specify `ssl` option, and provide
+normal mode, for this purposes you MUST NOT specify `ssl` option, and provide
 only a protocol-specific mount point:
 
 ```
@@ -250,9 +249,8 @@ openssl x509 -req -days 365 -in server.csr \
 
 ### Fallbacks
 
-You can mount/bind any part of `nodeca.server` tree, even serve `forum.posts`
-and `forum.threads` by different address:port points (although if you do so,
-I recommend you to visit a doctor).
+You can mount/bind any part of N.wire's `server:**` channel, even serve
+`forum.posts` and `forum.threads` by different address:port points.
 
 When you specify mount/bind options for `forum` and `forum.posts`, the last one
 will use options of `forum` as "defaults". In this case we can describe the way
@@ -264,8 +262,8 @@ of fallbacks as follows:
 #### Default mount/binding point
 
 You can use `default` bind-level key to describe "default" fallback mount point.
-Options of this case are used as "defaults" for all API paths and take place,
-when API path has no mount/bind options:
+Options of this case are used as "defaults" for all server methods and take
+place, when method has no mount/bind options:
 
 ```
 default:

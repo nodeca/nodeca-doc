@@ -4,9 +4,9 @@ isPage: true
 order: 90
 ---
 
-Files `./server/**/*.js are loaded & initialized as server responders.
+Files `./server/**/*.js` are loaded & initialized as server responders.
 
-```
+``` none
 ├─ server/
 │   └─ admin/
 │       ├─ dashboard.js
@@ -36,7 +36,7 @@ module.exports = function (N, apiPath) {
 ```
 
 **NOTE** `server:` prefix is reserved for server responders. You can be sure,
-that all events will pass `env` as listenner params.
+that all events will pass `env` (enviroment) as listenner params.
 
 
 Request Environment (env)
@@ -45,7 +45,7 @@ Request Environment (env)
 All requests are executed within separate context, with `env` structure
 available:
 
-```
+``` none
 env                     # `this` context of actions/filters
 
   params                # request params
@@ -100,7 +100,8 @@ server-server communications. But we have exclusion for `static` helpers
 Hooks
 -----
 
-Data processing can be extended by adding more listeners. See
+Data processing can be extended by adding channel listeners. They sequentially
+modify `env` object, according to priorities. See
 [source code](https://github.com/nodeca/nodeca.core/tree/master/lib/hooks/requests)
 of existing extentions.
 

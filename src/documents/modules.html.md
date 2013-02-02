@@ -12,9 +12,9 @@ In practice that means:
 - Avoid global modules availability - use events or local requires
 - Use FS path to calculate resource path, for convenience.
 
-That's acheaved via advanced bundler. Note, that we don't have local config
-for each module, as in BEM. Instead, we use global rules for each resource type.
-That's more simple in our case.
+That's acheived by advanced bundler. Note, that we don't have local config
+for each module, as in [BEM](http://bem.info/). Instead, we use global
+rules for each resource type (in `bundle.yml`). That's more simple in our case.
 
 See `Bundler` section for details.
 
@@ -22,20 +22,21 @@ See `Bundler` section for details.
 Local helpers, to simplify resources include
 --------------------------------------------
 
-We support extentions for jade / stylus / i18n, to simplify resource include:
+We support extentions for jade / stylus / i18n, to simplify files references:
 
 - `@` means root of package:
   - `@/path` - from the root of current package
   - `@package/path` - from the root of foreign package
-- i18n names are always relative to current module, by default
-- on client code, `require` automatically bundle code. bundle.yml can define
+- i18n names are relative to current module, by default
+- on client side, `require` automatically bundle code. `bundle.yml` can define
   location of bundled module
 
 Helpers:
 
-- `require` in node is not extended / monkey-patched
+- `require` in node is NOT extended. Use `require('<package>/path/to/file')`,
+   it's enougth
 - `require` in client
-  - understands `.` (relative to current path)
+  - understands relative paths and package names
   - understands `@`
   - bundles code
 - `self.include()` (helper, do not miss with `include` directive) in jade
