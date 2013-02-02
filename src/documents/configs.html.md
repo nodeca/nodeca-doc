@@ -67,6 +67,7 @@ options                     # minor variables, to keep root clear
     public_key
 
 setting_schemas             # Setting configs & defaults
+setting_groups              # Settings tabs/groups definitions
 
 menus                       # menus.<namespace>.<menu_id>.items.configs
 

@@ -33,15 +33,14 @@ We support extentions for jade / stylus / i18n, to simplify files references:
 
 Helpers:
 
-- `require` in node is NOT extended. Use `require('<package>/path/to/file')`,
+- `require` in node is NOT extended. Use `require('<node.module>/path/to/file')`,
    it's enougth
 - `require` in client
-  - understands relative paths and package names
-  - understands `@`
+  - understands relative paths and node.modules names (works as on server)
   - bundles code
-- `self.include()` (helper, do not miss with `include` directive) in jade
+- `self.partial()` in jade
   - understands `@`
-  - autopatch relative i18n paths
+  - allow to render relative i18n paths
 - `import` in stylus
-  - understands `@` (TBD)
+  - understands relative paths and node.modules names (works as on server)
 

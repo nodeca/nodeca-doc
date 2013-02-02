@@ -106,8 +106,8 @@ Technically, such link will run page loader first, then update page inline.
 ---
 router:
   direct_invocators:
-    forums.threads.show: on
-    search: on
+    forums.threads.show: true
+    search: true
 ```
 
 **CAUTION**. NEVER give direct access to methods, that posts data. That will

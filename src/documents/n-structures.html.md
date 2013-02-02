@@ -34,7 +34,7 @@ N
     version               # global app version, to force clients reload
     router                # router instance, filled with routes from config
 
-    ?env                   # runtime enviroment ???client only???
+    env                   # runtime enviroment ???client only???
 
     i18n                  # translator (BabelFish) instance (different on server & client)
 
@@ -61,10 +61,21 @@ N
 
     # client-specific
 
+    csrf
+    locale
+
+    is_guest
+    is_member
+
+    recaptcha
+
+    ?layout
+
     ?debug                 #
     ?user_id               #
     ?theme_id              #
     ?language              #
+    ?user_name
 
     ?views
 ```
