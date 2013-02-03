@@ -25,8 +25,6 @@ N
   models                  # server models (universal, implementation independent
   settings                # settings class, see ./lib/system/init/store.js
 
-  ?stores
-
   # server & client, dynamic data
 
   runtime                 # `dynamic` structures

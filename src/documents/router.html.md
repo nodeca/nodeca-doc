@@ -44,11 +44,6 @@ router:
 
     search:
       "/search/": ~
-
-    users.profile:
-      "#/users/profile/{user_id}/{tab}":
-        user_id: /\d+/
-        tab: /general|last-msgs/
 ```
 
 **NOTICE**. Routes with leading `#` are used by clients ONLY.
