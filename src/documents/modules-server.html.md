@@ -48,38 +48,39 @@ available:
 ``` none
 env                     # `this` context of actions/filters
 
+  method                # called method name (e.g.: ‘forum.posts.show’)
   params                # request params
 
   data                  # raw data from models
 
+  err                   # internal, to pass error on finalization in responder
+  log                   # internal, low-level logger for responders
+  body                  # internal, used in responder end to prepare reply
+
+  headers               # http headers sandbox. (!) don't use `res` directly
   
   ?settings              # optional sandbox for settings (permissions) fetch
     params              # required for fetch
     fetch()             #
 
   origin                # low-level data, rarely used, mostly to determine request type
-    http                # When request comes from HTTP, this will contain
-      req               # real server request and server response objects.
-      res               #
-    rpc                 # When request comes from AJAX RPC, this will contain
-      req               # real server request and server response objects.
-      res               #
+    req                 # real server request and server response objects.
+    res                 #
 
   session               # session data
     session_id
+    csrf
     user_id
     locale
     theme
 
   request               # request details
-    method              # called method name (e.g.: ‘forum.posts.show’)
     namespace           # called method namespace (e.g.: `forum`)
     ip                  # request ip
     user_agent          # browser/user agent
+    type                # responder type (http/rpc)
 
   response              # Response sandbox
-    err.code            # (Optional)
-    err.message         # (Optional)
     data                # output data (for json or renderer)
                         #     Default: `{widgets: {}}`
     layout              # (Optional) ‘default’ if not set
@@ -91,6 +92,10 @@ env                     # `this` context of actions/filters
   extras                # shared storage for data (used for helpers)
     puncher()
     setCookies()
+
+  runtime               # data, injected into http page
+    layout
+    csrf
 ```
 
 **NOTE**. `env` should avoid functions, to be transparent for

@@ -105,3 +105,26 @@ pages more than several days (to avoid VERY complex dependencies).
 2. Assets are optimized too.
 
 If you add new type of binary responder - take care about HEADs.
+
+
+RPC protocol spec
+-----------------
+
+### Request
+
+`$.post('/io/rpc', payload)`
+
+``` none
+version       # application version (client need to refresh on server update)
+csrf          # CSRF token (received on page load via HTTP)
+methods       # PRC method name (`forum.post`)
+params        # RPC call params
+```
+
+### Reply
+
+``` none
+version       # app version
+error         # env.err if exists
+data          # env.response.data (if no error)
+```
