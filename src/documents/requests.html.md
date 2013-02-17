@@ -126,5 +126,8 @@ params        # RPC call params
 ``` none
 version       # app version
 error         # env.err if exists
-data          # env.response.data (if no error)
+response      # env.response (if no error)
+  layout      # needed to render ajax
+  view        # optional, = method by default
+  data        # env.response.data
 ```
