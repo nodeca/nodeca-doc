@@ -55,19 +55,35 @@ That's a real file from `nodeca.core` application.
 
 ``` none
 bundles:
-  frontend:
+  lib
     - lib
+
+  frontend:
     - core
     - common
 
   backend:
-    - lib
     - core
     - admin
 
 
 packages:
+
   admin:
+    # Dependencies
+    depends:
+      - lib
+
+    # Special resource to bundle external libraries. Can be used
+    # on client via require(). Libraries can be defined by
+    # - node.js module name
+    # - relative path from app root
+    # - alias + relative path
+    vendor:
+      - "lodash"
+      - "./path/to/date.js"
+      - jquery: "./assets/vendor/jquery/jquery.js"
+
     client:
       root:       "./client/admin"
       include:    "*.js"
@@ -98,6 +114,9 @@ packages:
 
 
   common:
+    depends:
+      - lib
+
     client:
       root:       "./client/common"
       include:    "*.js"
