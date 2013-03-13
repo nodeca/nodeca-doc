@@ -82,7 +82,7 @@ env                     # `this` context of actions/filters
 
   response              # Response sandbox
     data                # output data (for json or renderer)
-                        #     Default: `{widgets: {}}`
+                        #     Default: `{ blocks: {} }`
     layout              # (Optional) ‘default’ if not set
     view                # (Optional) request.method if not set
 
