@@ -50,9 +50,16 @@ We provide constants available in templates on both server and client:
 
 ### Helpers
 
+##### partial(apiPath, locals)
+
+Renders template named by `apiPath`. The path is resolved relative to the current
+template by default. You can specify an absolute API path using `@` symbol.
+
+Example: `"@common.blocks.recaptcha"`
+
 ##### asset_path(logicalPath)
 
-Retuns full URL to asset (with digest)
+Returns full URL to asset (with digest)
 
 ##### asset_include(logicalPath) -> String
 
@@ -70,3 +77,7 @@ Returns generated URL for `name` API path and given `params`.
 ##### t(phrase, params) -> String
 
 Returns translated `phrase`.
+
+##### t.exists(phrase) -> Boolean
+
+Returns `true` if there is an existent `phrase` translation. `false` otherwise.
