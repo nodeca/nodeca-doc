@@ -36,6 +36,11 @@ N
 
     i18n                  # translator (BabelFish) instance (different on server & client)
 
+      # client only (on serverside those are placed in `env`)
+
+      t()                 # shortcuts, with current locale
+      t.exists()          #
+
     ?client_routes
 
     # server-specific
@@ -44,13 +49,13 @@ N
     mainApp               # root application
     apps                  # array of loaded apps info { name, absolute_path }
 
-    ?views                 # compiled views
+    ?views                # compiled views
     ?client
 
-    ??assets                # assets-related data
+    ??assets              # assets-related data
       environment         # Mincer.Environmant instanse
       manifest            # Mincer manifest of assets
-      server                 # distribution map for `loadAssets.init`
+      server              # distribution map for `loadAssets.init`
       distribution
 
     mongoose
