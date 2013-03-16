@@ -79,6 +79,7 @@ env                     # `this` context of actions/filters
     ip                  # request ip
     user_agent          # browser/user agent
     type                # responder type (http/rpc)
+    matched             # matched route cache, to avoid duplicate router call
 
   response              # Response sandbox
     data                # output data (for json or renderer)
