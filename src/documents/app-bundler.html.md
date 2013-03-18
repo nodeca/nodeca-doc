@@ -55,7 +55,7 @@ That's a real file from `nodeca.core` application.
 
 ``` none
 bundles:
-  lib
+  lib:
     - lib
 
   frontend:
@@ -68,45 +68,34 @@ bundles:
 
 
 packages:
-
   admin:
-    # Dependencies
     depends:
       - lib
-
-    # Special resource to bundle external libraries. Can be used
-    # on client via require(). Libraries can be defined by
-    # - node.js module name
-    # - relative path from app root
-    # - alias + relative path
-    vendor:
-      - "lodash"
-      - "./path/to/date.js"
-      - jquery: "./assets/vendor/jquery/jquery.js"
 
     client:
       root:       "./client/admin"
       include:    "*.js"
-      exclude:    "/(^|\\/)_.*/"
+      exclude:    "/(^|\\/|\\\\)_.*/"
 
     views:
       root:       "./client/admin"
       include:    "*.jade"
-      exclude:    "/(^|\\/)_.*/"
+      exclude:    "/(^|\\/|\\\\)_.*/"
 
     i18n_client:
       root:       "./client/admin"
       include:    "i18n/*.yml"
 
     styles:
-      root:       "./client/admin"
-      main:       "app.styl"
-      include:    "*.styl"
+      root:       "."
+      main:       "assets/desktop/admin/app.styl"
+      include:    "client/admin/**.styl"
+      exclude:    "/(^|\\/|\\\\)_.*/"
 
     server:
       root:       "./server/admin"
       include:    "*.js"
-      exclude:    "/(^|\\/)_.*/"
+      exclude:    "/(^|\\/|\\\\)_.*/"
 
     i18n_server:
       root:       "./server/admin"
@@ -120,26 +109,27 @@ packages:
     client:
       root:       "./client/common"
       include:    "*.js"
-      exclude:    "/(^|\\/)_.*/"
+      exclude:    "/(^|\\/|\\\\)_.*/"
 
     views:
       root:       "./client/common"
       include:    "*.jade"
-      exclude:    "/(^|\\/)_.*/"
+      exclude:    "/(^|\\/|\\\\)_.*/"
 
     i18n_client:
       root:       "./client/common"
       include:    "i18n/*.yml"
 
     styles:
-      root:       "./client/common"
-      main:       "app.styl"
-      include:    "*.styl"
+      root:       "."
+      main:       "assets/desktop/common/app.styl"
+      include:    "client/common/**.styl"
+      exclude:    "/(^|\\/|\\\\)_.*/"
 
     server:
       root:       "./server/common"
       include:    "*.js"
-      exclude:    "/(^|\\/)_.*/"
+      exclude:    "/(^|\\/|\\\\)_.*/"
 
     i18n_server:
       root:       "./server/common"
@@ -150,20 +140,24 @@ packages:
     server:
       root:       "./server/core"
       include:    "*.js"
-      exclude:    "/(^|\\/)_.*/"
+      exclude:    "/(^|\\/|\\\\)_.*/"
 
     # Remove later, client layout should be in `common` 
     views:
       root:       "./views/desktop/layouts"
       include:    "*.jade"
-      exclude:    "/(^|\\/)_.*/"
+      exclude:    "/(^|\\/|\\\\)_.*/"
       apiPrefix:  "layouts"
 
 
   lib:
+    vendor:
+      - "lodash"
+
     client:
-      root:       "./assets"
-      main:       "javascripts/lib.js"
+      root:       "."
+      main:       "assets/javascripts/lib.js"
+      include:    "client/lib/**.js"
 
     bin:
       root:       "./assets"
@@ -171,4 +165,12 @@ packages:
         - javascripts/loader.js.ejs
         - vendor/es5-shim.js
         - vendor/json2.js
+        - "**.woff"
+        - "**.eot"
+        - "**.tff"
+        - "**.svg"
+        - "**.png"
+        - "**.jpg"
+        - "**.jpeg"
+        - "**.gif"
 ```
