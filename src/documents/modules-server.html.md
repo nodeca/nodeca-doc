@@ -35,7 +35,7 @@ module.exports = function (N, apiPath) {
 };
 ```
 
-You can safely invoke server handlers from each other using `[Wire#emit](n-wire.html)`.
+You can safely invoke server handlers from each other using [Wire#emit](n-wire.html).
 For example, you have page `forum.index` with block `forum.blocks.pagination` on
 it. If the block needs data from it's own server-side handler, you can simply
 invoke that from `forum.index` handler like so:
