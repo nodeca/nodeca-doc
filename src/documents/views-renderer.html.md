@@ -81,3 +81,11 @@ Returns translated `phrase`.
 ##### t.exists(phrase) -> Boolean
 
 Returns `true` if there is an existent `phrase` translation. `false` otherwise.
+
+##### get_apipath()
+
+Returns API path of the requested server method. (e.g. `forum.index`)
+
+##### set_layout(template)
+
+Allows to change layout for use by renderer. Or disable it by passing null.
