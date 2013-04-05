@@ -38,7 +38,7 @@ Helpers:
 - `require` in client
   - understands relative paths and node.modules names (works as on server)
   - bundles code
-- `self.partial()` in jade
+- `self.partial(template[, locals])` in jade
   - understands `@`
   - allow to render relative i18n paths
 - `import` in stylus
