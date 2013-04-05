@@ -35,6 +35,15 @@ module.exports = function (N, apiPath) {
 };
 ```
 
+You can safely invoke server handlers from each other using `[Wire#emit](n-wire.html)`.
+For example, you have page `forum.index` with block `forum.blocks.pagination` on
+it. If the block needs data from it's own server-side handler, you can simply
+invoke that from `forum.index` handler like so:
+
+``` javascript
+N.wire.emit('server:forum.blocks.pagination', env);
+```
+
 **NOTE** `server:` prefix is reserved for server responders. You can be sure,
 that all events will pass `env` (enviroment) as listenner params.
 
@@ -81,14 +90,25 @@ env                     # `this` context of actions/filters
     type                # responder type (http/rpc)
     matched             # matched route cache, to avoid duplicate router call
 
-  response              # Response sandbox
-    data                # output data (for json or renderer)
-                        #     Default: `{ blocks: {} }`
-    layout              # (Optional) ‘default’ if not set
+  response              # response sandbox
+    data                # output data (for json or renderer), default:
+                        # {
+                        #   head:    { title: null }, # data for html head
+                        #   blocks:  { },
+                        #   menus:   { },
+                        #   content: null # rendered content for a layout
+                        # }
+    layout              # (Optional) null is not set.
     view                # (Optional) request.method if not set
 
-  helpers               # helpers added by filters and available in views
-    t()                 # babelfish.t proxy, without `language` param
+  helpers                   # server-side helpers available in server handlers and view templates
+    t(name[, params])       # babelfish.t proxy, without `language` param
+    t.exists(name)
+    get_apipath()           # returns API path of server method requested by a client (e.g. ‘forum.posts.show’)
+    set_layout(name)        # allows to change default page layout
+    link_to(name[, params]) # `N.runtime.route.linkTo` alias for templates
+    asset_path(path)        # returns path to Mincer's asset
+    asset_include(path)     # returns compiled Mincer's asset as a string
 
   extras                # shared storage for data (used for helpers)
     puncher()
