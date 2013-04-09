@@ -4,12 +4,20 @@ isPage: true
 order: 100
 ---
 
-There are 2 ways to  call server methods
+All requests pass vie several nested stages:
 
-1. Via http GET requests, if router has matching rule
-2. Via `N.io.rpc` call from client JS (that's special POST-request)
+1. __Responder__ - (HTTP/RPC/WS/..) converts requests/responses from different
+  sources to unified format.
+2. __Server chain wrapper__ - (optional) used to assign hooks for dynamic pages
+  (exclude files, like assets/static).
+3. __server__ or __server_bin__ chain - methods for dynamic pages and static
+  files.
 
-Data flow is almost the same, with only 2 differences:
+Example:
+
+```
+http start -> wrapper start -> method -> wrapper end -> http end
+```
 
 - RPC data is not rendered, and returned as JSON
 - low-level request info is located in `env.origin.rpc` or `env.origin.http`

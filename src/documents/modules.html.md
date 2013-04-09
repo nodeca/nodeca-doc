@@ -31,7 +31,7 @@ We support extentions for jade / stylus / i18n, to simplify files references:
 - on client side, `require` automatically bundle code. `bundle.yml` can define
   location of bundled module
 
-Helpers:
+Notes:
 
 - `require` in node is NOT extended. Use `require('<node.module>/path/to/file')`,
    it's enougth
@@ -44,3 +44,30 @@ Helpers:
 - `import` in stylus
   - understands relative paths and node.modules names (works as on server)
 
+See `env.helpers` in [server modules](modules-server.html) for standard functions
+
+
+Views Rendering
+---------------
+
+In the server, views renderer is an after-filter middleware. Render expect
+environment to contain `response` object (see Request Environment) with properties:
+
+- **data** raw output data (used as JSON output or as sandbox for views)
+- **layout** name to use (when rendering HTML)
+- **view** name to use (when rendering HTML or sending data to the client)
+
+Rendering consists of 2 steps:
+
+1. Rendering page inner
+2. Embedding it into layout
+
+On client side, process looks similar, but automated via `navigate.to` listener.
+
+
+### Layouts
+
+Usually, page wrapper (layout) is set by hook for all pages of `server:**` methods.
+But u can customize it as you wish from your template via `set_layout()` helper.
+
+Layout looks like usual client block, wich wraps `content` variable.
