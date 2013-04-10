@@ -25,6 +25,8 @@ N
   models                  # server models (universal, implementation independent
   settings                # settings class, see ./lib/system/init/store.js
 
+  views                   # compiled views
+
   # server & client, dynamic data
 
   runtime                 # `dynamic` structures
@@ -41,18 +43,15 @@ N
       t()                 # shortcuts, with current locale
       t.exists()          #
 
-    ?client_routes
-
     # server-specific
+
+    client_routes         # RAW router config data, used to initialize router on server side
 
     args                  # CLI params
     mainApp               # root application
     apps                  # array of loaded apps info { name, absolute_path }
 
-    ?views                # compiled views
-    ?client
-
-    ??assets              # assets-related data
+    assets              # assets-related data
       environment         # Mincer.Environmant instanse
       manifest            # Mincer manifest of assets
       server              # distribution map for `loadAssets.init`
@@ -65,20 +64,13 @@ N
     # client-specific
 
     csrf
-    locale
+    locale                 # current locale ("en-US")
+    layout                 # current layout
 
     is_guest
     is_member
 
     recaptcha
 
-    ?layout
-
-    ?debug                 #
-    ?user_id               #
-    ?theme_id              #
-    ?language              #
     ?user_name
-
-    ?views
 ```
