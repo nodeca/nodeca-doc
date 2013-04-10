@@ -52,17 +52,15 @@ env                     # `this` context of actions/filters
   method                # called method name (e.g.: ‘forum.posts.show’)
   params                # request params
 
+  log_request           # internal, low-level logger for responders
+
   data                  # raw data from models
 
   err                   # internal, to pass error on finalization in responder
-  log                   # internal, low-level logger for responders
+  status
   body                  # internal, used in responder end to prepare reply
 
   headers               # http headers sandbox. (!) don't use `res` directly
-  
-  ?settings              # optional sandbox for settings (permissions) fetch
-    params              # required for fetch
-    fetch()             #
 
   origin                # low-level data, rarely used, mostly to determine request type
     req                 # real server request and server response objects.
@@ -76,9 +74,7 @@ env                     # `this` context of actions/filters
     theme
 
   request               # request details
-    namespace           # called method namespace (e.g.: `forum`)
     ip                  # request ip
-    user_agent          # browser/user agent
     type                # responder type (http/rpc)
     matched             # matched route cache, to avoid duplicate router call
 
@@ -106,11 +102,19 @@ env                     # `this` context of actions/filters
 
   extras                # shared storage for data (used for helpers)
     puncher()
-    setCookies()
+    setCookie()
+    settings            # optional sandbox for settings (permissions) fetch
+      params            # required for fetch
+      fetch()
 
   runtime               # data, injected into http page
     layout
     csrf
+
+    locale
+    user_name
+    is_member
+    is_guest
 ```
 
 **NOTE**. `env` should avoid functions, to be transparent for
