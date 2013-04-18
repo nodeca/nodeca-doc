@@ -83,8 +83,7 @@ env                     # `this` context of actions/filters
                         # {
                         #   head:    { title: null }, # data for html head
                         #   blocks:  { },
-                        #   menus:   { },
-                        #   content: null # rendered content for a layout
+                        #   menus:   { }
                         # }
     layout              # (Optional) null is not set.
     view                # (Optional) request.method if not set
