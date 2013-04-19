@@ -64,12 +64,12 @@ N
     # client-specific
 
     csrf
-    locale                 # current locale ("en-US")
-    layout                 # current layout
+    locale                # current locale ("en-US")
+    layout                # current layout
 
-    page_data              # raw page data, for in-place rendering
-                           # by knockout, for example. Defined via `add_raw_data`
-                           # helper in template
+    page_data             # raw page data, for in-place rendering
+                          # by knockout, for example. Defined via `add_raw_data`
+                          # helper in template
 
     is_guest
     is_member
