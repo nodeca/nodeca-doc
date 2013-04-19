@@ -31,6 +31,13 @@ Wire listeners
 There are some common events, that can be emitted from any modules:
 
 - __navigate.to__ - go to another page
-- __navigate.exit__ - fired prior to leave current page (use to free resources)
-- __navigate.done__ - fired after page data loaded and rendering compleete
+- __navigate.exit:<api_path> - fired, prior to leave page with certain api path. Useful
+  for resourses cleanup.
+- __navigate.exit__ - the same as above, but global (fired every time we leave any page).
+  Can be used to control global page objects
+- __navigate.done:<api_path>__ - fired page with certain api path, after data loaded
+  and rendering compleete. Useful to init internal structures, that depends on DOM and
+  another scripts. Can be used instead of $(function(){...}), but for one page
+- __navigate.done__ - the same as above, but global (fired every time for all pages).
+  Can be used instead of $(function(){...})
 - __notify__ - show popup message in top right corner

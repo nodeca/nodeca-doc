@@ -51,7 +51,7 @@ N
     mainApp               # root application
     apps                  # array of loaded apps info { name, absolute_path }
 
-    assets              # assets-related data
+    assets                # assets-related data
       environment         # Mincer.Environmant instanse
       manifest            # Mincer manifest of assets
       server              # distribution map for `loadAssets.init`
@@ -66,6 +66,10 @@ N
     csrf
     locale                 # current locale ("en-US")
     layout                 # current layout
+
+    page_data              # raw page data, for in-place rendering
+                           # by knockout, for example. Defined via `add_raw_data`
+                           # helper in template
 
     is_guest
     is_member
