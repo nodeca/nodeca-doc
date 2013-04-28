@@ -59,6 +59,8 @@ env                     # `this` context of actions/filters
   err                   # internal, to pass error on finalization in responder
   status
   body                  # internal, used in responder end to prepare reply
+  post: null            # internal, filled by formidable with `fields` & `files`
+                        # structures, for http POST requests
 
   headers               # http headers sandbox. (!) don't use `res` directly
 
