@@ -107,9 +107,11 @@ env                     # `this` context of actions/filters
     add_raw_data(key, val)  # add new key into `runtime` object (see below)
 
   extras                # shared storage for data (used for helpers)
-
     puncher()
-    setCookie()
+
+    getCookie(name)                   # get value of input cookie, *not* output
+    setCookie(name, value[, options]) # set output cookie
+
     settings            # optional sandbox for settings (permissions) fetch
       params            # required for fetch
       fetch()
