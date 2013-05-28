@@ -90,8 +90,11 @@ env                     # `this` context of actions/filters
     layout              # (Optional) null is not set.
     view                # (Optional) request.method if not set
 
-  helpers                   # server-side helpers available in server handlers
-                            # and view templates
+  t(name[, params])     # server-side Babelfish#t wrapper.
+                        # uses right locale and prepends env.method to name.
+  t.exists(name)
+
+  helpers                   # helpers for view templates
     t(name[, params])       # babelfish.t proxy, without `language` param
     t.exists(name)
     apiPath                 # returns API path requested server method (‘forum.posts.show’)
