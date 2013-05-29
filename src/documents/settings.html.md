@@ -55,15 +55,15 @@ Setting definition
       - **extends** (default = false)- When `true`, means that setting combined
         from several stores. Missed properties taken from base definition.
       - **type**
-        (`boolean`|`string`|`text`|`wysiwyg`|`number`|`dropdown`|`combobox`|`usergroups`|`users`|`forums`,
+        (`boolean`|`string`|`text`|`wysiwyg`|`number`|`dropdown`|`combobox`,
         required) - Type of the setting.
       - **default** - Default value. If not set, "empty" value used (false, 0, "", [], and so on)
       - **category_key** - used to combine settings in list, inside ACP
       - **group_key** - used split settings by tabs and groups, for better navigation
       - **priority** (default = 10) - Ordering priority for ACP
-      - **values** - key-value dictionary for `dropdown` and `combobox` types
-      - **before_show** - *TBD* JS code executed before showing setting in ACP
-      - **before_save** - *TBD* JS code executed before saving setting
+      - **values** - array of key-value pairs (like `value_id: "Value String"`)
+        or name of dynamic values fetcher function (only `"usergroups"` is
+        available for now) for `dropdown` and `combobox` types
       - **validators**
         (`required`|`numeric`|`integer`|`positive_integer`|`regexp`|`custom`,
         optional) - *TBD* reserved for future use
