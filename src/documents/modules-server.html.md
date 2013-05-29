@@ -69,11 +69,10 @@ env                     # `this` context of actions/filters
     res                 #
 
   session               # session data
-    session_id
+    ip
     csrf
     user_id
     locale
-    theme
 
   request               # request details
     ip                  # request ip
