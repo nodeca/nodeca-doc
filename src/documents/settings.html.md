@@ -87,8 +87,12 @@ settings logic, and used only in interface
 i18n
 ----
 
-Path for settings localizations is `admin.setting.<setting_name>` for name
-and `admin.setting.<setting_name>_help` for help phrase (description)
+Paths for settings localizations:
+
+- `admin.core.setting_names.<name>` for setting name itself
+- `admin.core.setting_names.<name>_help` for help phrase (description)
+- `admin.core.group_names.<name>` for setting group name
+- `admin.core.category_names.<name>` for setting category name
 
 Note, we considet, that settings, groups & categories has unique IDs. So,
 start group id with "grp_" and categories with "cat_" prefixes.
