@@ -186,8 +186,8 @@ Options are Objects of key-value pairs. All parts are optional:
 - **listen** (String): Which `address[:port = 80]` we should listen. It is
   useful when you want to bind different parts of application on different
   interfaces, e.g. use SSL for users only, or separate interface for assets.
-- **mount** (String): Mount point given in form of `[proto://host:port][/path]`,
-  `proto` and `port` are optional. Examples:
+- **mount** (String): Mount point given in form of `[proto:][//[host][:port]][/path]`,
+  all parts are optional. You can use any combination. Examples:
   - `https://users.nodeca.org`:
     mount to the root of `users.ndoca.org` host using HTTPS protocol only.
   - `//beta.nodeca.org:3000`:
@@ -196,6 +196,10 @@ Options are Objects of key-value pairs. All parts are optional:
     mount to the `/forum` path of any host using any protocol.
   - `//dev.nodeca.org:3000/users`:
     mount to the `/users` path of `dev.nodeca.org:3000` host using any protocol.
+  - `//:3000/`
+    mount to the root of any host and any protocol at 3000 port.
+  - `http:/forum`
+    mount to the `/forum` at `http` protocol of any host and port.
 - **ssl** (Object): Contains paths to `key` and `cert` files. Paths are
   relative to the main app root, but you may specify _absolute_ pathname that
   starts with a leading slash. You also can use _one_ file as either `key` and
