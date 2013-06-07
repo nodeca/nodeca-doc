@@ -196,9 +196,10 @@ Options are Objects of key-value pairs. All parts are optional:
     mount to the `/forum` path of any host using any protocol.
   - `//dev.nodeca.org:3000/users`:
     mount to the `/users` path of `dev.nodeca.org:3000` host using any protocol.
-- **ssl** (Object): Contains paths to `pfx` or `key` and `cert` files. Paths are
+- **ssl** (Object): Contains paths to `key` and `cert` files. Paths are
   relative to the main app root, but you may specify _absolute_ pathname that
-  starts with a leading slash.
+  starts with a leading slash. You also can use _one_ file as either `key` and
+  `cert` - just concatenate them using a text editor.
 
 
 ### HTTPS
