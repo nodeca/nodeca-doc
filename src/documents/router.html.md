@@ -90,6 +90,8 @@ idea to cache full url (or md5) - to avoid recalculations on every request.
 
 ## Direct Invocators
 
+**DEPRECATED AND REMOVED FROM THE CODE**
+
 Sometime we like API methods to be accessible via direct HTTP links and browser
 history. For this purpose we use *direct invocator* rule which looks like:
 
