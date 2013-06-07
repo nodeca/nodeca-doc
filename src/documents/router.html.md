@@ -14,11 +14,11 @@ Router config for the client is kept under `N.runtime.client_routes`.
 
 ## Application Routes
 
-Application routes are defined in `router.map` section of config files:
+Application routes are defined in `router` section of config files:
 
 ``` none
 router:
-  map:
+  http.get:
     forums.list:
       "/f{forum_id}/":
         forum_id: /\d+/
@@ -46,6 +46,13 @@ router:
       "/search/": ~
 ```
 
+All routes are splitted into groups by responders they are related.
+That groups may be specialized by dot-separated list of HTTP methods.
+In the above example there is the only responder `http` with `get` method.
+It means that declared routes will be served by `http` responder and only for
+GET HTTP method. Method names in the config must be lowercased. `get` method
+always implies `head` method as well.
+
 **NOTICE**. Routes with leading `#` are used by clients ONLY.
 __Not implemented yet__
 
@@ -70,7 +77,7 @@ Routes can contain slugs. Technically, that's usual optional params.
 
 ``` none
 router:
-  map:
+  http.get:
     faq.post.show:
       "/qa/({categoryslug}/){post_id}(-{postslug}).html": ~
 ```
@@ -136,7 +143,7 @@ rule as:
 
 ``` none
 router:
-  map:
+  http.get:
     forums.list:
       "/f{forum_id}/":
         page: /[01]/
@@ -157,7 +164,7 @@ wiped. Without this key, objects are reqursively merged.
 
 ``` none
 router:
-  map:
+  http.get:
     forums.list:
       ~override: true
       "/forum{forum_id}/":
