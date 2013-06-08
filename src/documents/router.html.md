@@ -95,64 +95,10 @@ with 302 code. This can be done with `before` filter. Note, that it's a good
 idea to cache full url (or md5) - to avoid recalculations on every request.
 
 
-## Direct Invocators
-
-**DEPRECATED AND REMOVED FROM THE CODE**
-
-Sometime we like API methods to be accessible via direct HTTP links and browser
-history. For this purpose we use *direct invocator* rule which looks like:
-
-`/!{methodname}?param1=val1&...&paramN=valN`
-
-Technically, such link will run page loader first, then update page inline.
-
-``` none
----
-router:
-  direct_invocators:
-    forums.threads.show: true
-    search: true
-```
-
-**CAUTION**. NEVER give direct access to methods, that posts data. That will
-cause CSRF vulnerability. **ONCE AGAIN**. Only give direct access to "read"
+**CAUTION**. NEVER route http methods, that posts data. That will
+cause CSRF vulnerability. **ONCE AGAIN**. Only give  access to http "read"
 methods, that will not modify data. Posting should be done ONLY via rpc
 call, when user click on links, buttons, and so on. 
-
-**NOTICE**. Before dispatching "direct" invocator, we try to find appropriate
-"SEO" route for it, and if exists - redirect there with 301 code.
-Here is algorithm, how to find "appropriate" URL:
-
--   find all possible routes for given method
--   filter out routes with same amount (and names) of params
--   use first route which param rules fit given values
-
-For example, using routes map from above:
-
--   */!forums.list?forum_id=123*
-    `-> /f{forum_id}`: no page_id requried for "paged" verion
--   */!forums.list?forum_id=123&page_id=3*
-    `-> /f{forum_id}/index{page}.html`: page_id matches `/[2-9]|[1-9]\d+/`
--   */!forums.list?forum_id=123&page_id=1*
-    (!) no redirect, as no page_id does not match RegExp of second route and
-    first route has no such param at all
-
-Notice third decision. Unfortunately we are not able to guess automatically this
-situation, so instead we can become more verbose, and rewrite our first route
-rule as:
-
-``` none
-router:
-  http.get:
-    forums.list:
-      "/f{forum_id}/":
-        page: /[01]/
-        forum_id: /\d+/
-    # ...
-```
-
-In this case, request to */!forums.list?forum_id=123&page_id=1* will be
-redirected to "/f{forum_id}/".
 
 
 ### Overrides
@@ -211,8 +157,8 @@ Options are Objects of key-value pairs. All parts are optional:
     mount to the `/forum` at `http` protocol of any host and port.
 - **ssl** (Object): Contains paths to `key` and `cert` files. Paths are
   relative to the main app root, but you may specify _absolute_ pathname that
-  starts with a leading slash. You also can use _one_ file as either `key` and
-  `cert` - just concatenate them using a text editor.
+  starts with a leading slash. You also can use _one_ file (*.pem) as either
+  `key` and `cert` - just concatenate them using a text editor.
 
 
 ### HTTPS
