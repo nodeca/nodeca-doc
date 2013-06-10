@@ -77,7 +77,7 @@ env                     # `this` context of actions/filters
   request               # request details
     ip                  # request ip
     type                # responder type (http/rpc)
-    isSecure            # is current request performed via https
+    isEncrypted         # is current request performed via https
     matched             # matched route cache, to avoid duplicate router call
 
   response              # response sandbox
