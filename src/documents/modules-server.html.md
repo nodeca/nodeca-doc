@@ -112,10 +112,6 @@ env                     # `this` context of actions/filters
     getCookie(name)                   # get value of input cookie, *not* output
     setCookie(name, value[, options]) # set output cookie
 
-    forceSSL            # may be set to true by `server_chain` before-filters
-                        # to ensure client-server connection is secure.
-                        # it will issue http->https switching if needed.
-
     settings            # optional sandbox for settings (permissions) fetch
       params            # required for fetch
       fetch()
