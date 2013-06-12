@@ -94,6 +94,11 @@ env                     # `this` context of actions/filters
                         # uses right locale and prepends env.method to name.
   t.exists(name)
 
+  # wrapper over `N.runtime.router.linkTo`
+  # construts full url using current env for default protocol/host.
+  # use `prefixOptions` object to specify protocol. (port will be detected)
+  url_to(apiPath[, params[, prefixOptions]])
+
   helpers                   # helpers for view templates
     t(name[, params])       # babelfish.t proxy, without `language` param
     t.exists(name)
@@ -101,6 +106,7 @@ env                     # `this` context of actions/filters
     content                 # rendered part of page, for embedding into layout
     set_layout(name)        # allows to change default page layout
     link_to(name[, params]) # `N.runtime.route.linkTo` alias for templates
+    url_to(...)             # alias to `env.url_to`
     asset_path(path)        # returns path to Mincer's asset
     asset_include(path)     # returns compiled Mincer's asset as a string
     date                    # date manipulation helper
