@@ -122,8 +122,6 @@ env                     # `this` context of actions/filters
       params            # required for fetch
       fetch()
 
-    isUserIdChanged()   # internal. used by sessions hook.
-
   runtime               # data, injected into http page, used to pass variables
                         # for javascript
     layout
