@@ -116,6 +116,7 @@ env                     # `this` context of actions/filters
 
     getCookie(name)                   # get value of input cookie, *not* output
     setCookie(name, value[, options]) # set output cookie
+    updateCookie(name, optoins)       # update options of output cookie
 
     settings            # optional sandbox for settings (permissions) fetch
       params            # required for fetch
