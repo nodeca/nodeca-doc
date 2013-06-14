@@ -68,6 +68,7 @@ env                     # `this` context of actions/filters
     req                 # real server request and server response objects.
     res                 #
 
+  session_id            # session id as hex-encoded string
   session               # session data
     ip
     csrf
