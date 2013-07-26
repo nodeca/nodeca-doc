@@ -58,9 +58,6 @@ Setting definition
         (`boolean`|`string`|`text`|`wysiwyg`|`number`|`dropdown`|`combobox`,
         required) - Type of the setting.
       - **default** - Default value. If not set, "empty" value used (false, 0, "", [], and so on)
-      - **empty_value** - Used by some setting stores as value of non-existent setting.
-        Unlike **default** this should always be a "falsy" value to allow correct fallback to
-        setting value from superior settings store.
       - **category_key** - used to combine settings in list, inside ACP
       - **group_key** - used split settings by tabs and groups, for better navigation
       - **priority** (default = 10) - Ordering priority for ACP
