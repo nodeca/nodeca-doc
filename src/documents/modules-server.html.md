@@ -54,7 +54,7 @@ env                     # `this` context of actions/filters
 
   log_request           # internal, low-level logger for responders
 
-  data                  # raw data from models
+  data                  # raw data sandbox (fetched db models and so on)
 
   err                   # internal, to pass error on finalization in responder
   status
@@ -75,21 +75,18 @@ env                     # `this` context of actions/filters
     user_id
     locale
 
-  request               # request details
+  req                   # request details
     ip                  # request ip
     type                # responder type (http/rpc)
     isEncrypted         # is current request performed via https
     matched             # matched route cache, to avoid duplicate router call
 
-  response              # response sandbox
-    data                # output data (for json or renderer), default:
-                        # {
-                        #   head:    { title: null }, # data for html head
-                        #   blocks:  { },
-                        #   menus:   { }
-                        # }
-    layout              # (Optional) null is not set.
-    view                # (Optional) request.method if not set
+  res                   # response sandbox:
+                        #
+    head                # (optional) { title: null }, data for html head
+    blocks              # widgets data (breadcrumbs and so on)
+    menus               # (http only) static menus
+    layout              # (http only) site layout
 
   t(name[, params])     # server-side Babelfish#t wrapper.
                         # uses right locale and prepends env.method to name.
