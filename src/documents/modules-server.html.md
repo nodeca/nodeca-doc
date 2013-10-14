@@ -75,6 +75,12 @@ env                     # `this` context of actions/filters
     user_id
     locale
 
+  user_info             # some current user data, frequently used to process request
+    hb                  # boolean, is user hell-banned
+    is_guest
+    is_member
+    
+
   req                   # request details
     ip                  # request ip
     type                # responder type (http/rpc)
@@ -82,11 +88,11 @@ env                     # `this` context of actions/filters
     matched             # matched route cache, to avoid duplicate router call
 
   res                   # response sandbox:
-                        #
     head                # (optional) { title: null }, data for html head
     blocks              # widgets data (breadcrumbs and so on)
     menus               # (http only) static menus
     layout              # (http only) site layout
+    settings            # (optional) settings/permissions
 
   t(name[, params])     # server-side Babelfish#t wrapper.
                         # uses right locale and prepends env.method to name.
