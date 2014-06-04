@@ -61,21 +61,6 @@ N
     redis
     redback
 
-    # client-specific
+    # for additional client-specific properties see `env.runtime` content
 
-    csrf
-    locale                # current locale ("en-US")
-    layout                # current layout
-
-    page_data             # raw page data, for in-place rendering (by knockout,
-                          # for example). Defined via `add_raw_data`
-                          # helper in template
-    is_guest
-    is_member
-
-    recaptcha
-
-    ?user_name
-    used_id               # '000000000000000000000000' for guest
-    user_hid              # 0 for guest
 ```

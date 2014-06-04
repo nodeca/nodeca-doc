@@ -108,7 +108,7 @@ env                     # `this` context of actions/filters
     asset_path(path)        # returns path to Mincer's asset
     asset_include(path)     # returns compiled Mincer's asset as a string
     date                    # date manipulation helper
-    add_raw_data(key, val)  # add new key into `runtime.page` object (see below)
+    add_raw_data(key, val)  # add new key into `runtime.page_data` object (see below)
 
     # wrapper over `N.runtime.router.linkTo`
     # construts full url using current env for default protocol/host.
@@ -132,11 +132,16 @@ env                     # `this` context of actions/filters
 
     locale
     user_name
+    used_id             # '000000000000000000000000' for guest
+    user_hid            # 0 for guest
     is_member
     is_guest
     
-    page_data           # Used to inject objects into page, for 2-stage rendering.
-                        # For example, to run knockout on loaded page.
+    page_data           # raw page data, for in-place rendering (by knockout,
+                        # for example). Defined via `add_raw_data`
+                        # helper in template
+
+    recaptcha
 ```
 
 **NOTE**. `env` should avoid functions, to be transparent for
