@@ -76,4 +76,6 @@ N
     recaptcha
 
     ?user_name
+    used_id               # '000000000000000000000000' for guest
+    user_hid              # 0 for guest
 ```
