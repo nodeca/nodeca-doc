@@ -18,12 +18,20 @@ N
   i18n                    # translator (BabelFish) instance
                           # (client version is loaded with single locale only)
 
+  router                  # router instance, filled with routes from config
   views                   # compiled views
 
   # client only
 
   io                      # status codes
   io.rpc                  # client only, server methods call
+
+  runtime                 # `dynamic` structures
+
+    t()                 # shortcuts, with current locale
+    t.exists()          #
+
+    # for additional client-specific properties see `env.runtime` content
 
   # server only
 
@@ -33,8 +41,6 @@ N
   apps                    # array of loaded apps info { name, absolute_path }
 
   config                  # parsed config file
-
-  routes                  # RAW router config data, used to initialize router on server side
 
   assets                  # assets-related data
     environment           # Mincer.Environmant instanse
@@ -49,18 +55,4 @@ N
 
   redis
   redback
-
-  # server & client, dynamic data
-
-  runtime                 # `dynamic` structures
-
-    router                # router instance, filled with routes from config
-
-    # client only (on serverside those are placed in `env`)
-
-    t()                 # shortcuts, with current locale
-    t.exists()          #
-
-    # for additional client-specific properties see `env.runtime` content
-
 ```
