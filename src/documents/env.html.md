@@ -101,6 +101,7 @@ env                     # `this` context of actions/filters
     user_name
     used_id             # '000000000000000000000000' for guest
     user_hid            # 0 for guest
+    user_avatar         # avatar media id in filestore, or null for guest
     is_member
     is_guest
     
