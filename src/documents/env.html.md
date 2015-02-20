@@ -46,6 +46,7 @@ env                     # `this` context of actions/filters
     hb                  # boolean, is user hell-banned
     is_guest
     is_member
+    user_id             # null for guest
     
 
   req                   # request details
