@@ -47,7 +47,7 @@ env                     # `this` context of actions/filters
     is_guest
     is_member
     user_id             # null for guest
-    
+
 
   req                   # request details
     ip                  # request ip
@@ -105,11 +105,10 @@ env                     # `this` context of actions/filters
     user_avatar         # avatar media id in filestore, or null for guest
     is_member
     is_guest
-    
+
     page_data           # raw page data, for in-place rendering (by knockout,
                         # for example). Defined via `add_raw_data`
                         # helper in template
 
     recaptcha
 ```
-
