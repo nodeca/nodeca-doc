@@ -54,6 +54,7 @@ env                     # `this` context of actions/filters
     type                # responder type (http/rpc)
     isEncrypted         # is current request performed via https
     matched             # matched route cache, to avoid duplicate router call
+    tzOffset            # client timezone offset for date helper (use server one by default)
 
   res                   # response sandbox:
     head                # (optional) { title: null }, data for html head
