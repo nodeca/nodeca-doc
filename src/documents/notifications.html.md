@@ -1,6 +1,7 @@
 ---
 title: "Notifications"
 isPage: true
+order: 170
 ---
 
 Usage:

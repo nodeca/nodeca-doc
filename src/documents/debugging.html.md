@@ -1,6 +1,7 @@
 ---
 title: "Debug"
 isPage: true
+order: 160
 ---
 
 Skipping (js|css) compression/uglification

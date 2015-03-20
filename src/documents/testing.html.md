@@ -1,6 +1,7 @@
 ---
 title: "Testing"
 isPage: true
+order: 180
 ---
 
 Tests are locatet in `./test` folder, and follow project structure for
