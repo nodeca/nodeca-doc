@@ -38,7 +38,8 @@ env                     # `this` context of actions/filters
   session_id            # session id as hex-encoded string
   session               # session data
     ip
-    csrf
+    token_csrf
+    token_live
     user_id
     locale
 
@@ -97,7 +98,8 @@ env                     # `this` context of actions/filters
   runtime               # data, injected into http page, used to pass variables
                         # for javascript
     layout
-    csrf
+    token_csrf
+    token_live
 
     locale
     user_name
