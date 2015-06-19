@@ -45,9 +45,15 @@ env                     # `this` context of actions/filters
 
   user_info             # some current user data, frequently used to process request
     hb                  # boolean, is user hell-banned
+    locale              # current locale
     is_guest
     is_member
-    user_id             # null for guest
+    user_id             # null for guest, hex string otherwise
+    usergroups          # an array of object ids
+    user_name
+    user_hid
+    user_avatar
+
 
 
   req                   # request details
@@ -96,7 +102,7 @@ env                     # `this` context of actions/filters
       fetch()
 
   runtime               # data, injected into http page, used to pass variables
-                        # for javascript
+                        # for javascript (unused in rpc)
     layout
     token_csrf
     token_live
