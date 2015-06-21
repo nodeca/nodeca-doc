@@ -74,12 +74,12 @@ Vary: Accept-Encoding (for compressable data)
 ETag: xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
-**NOTE**. In clustered enviroment, file date should not be used to calculate ETag.
+**NOTE**. In clustered environment, file date should not be used to calculate ETag.
 
 
 ### Cache dynamic data
 
-Dynamic pages mostly depends on user id & language. That sould be cared, if
+Dynamic pages mostly depends on user id & language. That should be cared, if
 someone like to make dynamic pages cacheable. You should directly specify
 headers for pages, that should use cache advantages:
 

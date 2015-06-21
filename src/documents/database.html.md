@@ -58,7 +58,7 @@ Seed API is similar to migrations, but more simple. All seeds are placed in
 `./db/seeds` folder, one seed in each *.js file. Each file exports async
 function, that applies seed.
 
-**NOTE**. Loading seeds is limited to development/test enviroment. If you really
+**NOTE**. Loading seeds is limited to development/test environment. If you really
 need to run seed on production/staging, you must use option -f (--force)
 
 
@@ -78,5 +78,5 @@ Note, that dump can contain multiple files (MongoDB, Redis).
 $ ./bin/db-restore <snapshot-id> # restores data from snapshot with given id.
 ```
 
-(!) scripts force use development enviroment, to exclude posibility of data
+(!) scripts force use development environment, to exclude possibility of data
 corruption

@@ -13,7 +13,7 @@ N
   logger                  # logger instance
 
   version                 # global app version, to force clients reload
-  enviroment              # runtime enviroment ???client only???
+  environment             # runtime environment ???client only???
 
   i18n                    # translator (BabelFish) instance
                           # (client version is loaded with single locale only)
