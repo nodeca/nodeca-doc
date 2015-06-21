@@ -12,7 +12,7 @@ N
   wire                    # Message bus
   logger                  # logger instance
 
-  version                 # global app version, to force clients reload
+  version_hash            # global assets hash, to force clients reload
   environment             # runtime environment ???client only???
 
   i18n                    # translator (BabelFish) instance

@@ -123,7 +123,7 @@ RPC protocol spec
 `$.post('/io/rpc', payload)`
 
 ``` none
-version       # application version (client need to refresh on server update)
+version_hash  # assets hash to force client reload
 csrf          # CSRF token (received on page load via HTTP)
 methods       # PRC method name (`forum.post`)
 params        # RPC call params
@@ -132,7 +132,7 @@ params        # RPC call params
 ### Reply
 
 ``` none
-version       # app version
+version_hash  # assets hash
 error         # env.err if exists
 response      # env.response (if no error)
   layout      # needed to render ajax
