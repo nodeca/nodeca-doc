@@ -1,8 +1,15 @@
 ---
-title: "N.live (instant messaging)"
+title: "N.live (realtime)"
 isPage: true
-order: 70
+order: 75
 ---
+
+Used to:
+
+- get instant server messages (notifications about updates)
+- store small user data without creating new requests every time
+  (scroll positions, activities and so on).
+
 
 Methods
 -------
@@ -11,19 +18,27 @@ Methods
 - `N.live.on(channel, handler)` - registers `handler` to be executed upon messages in the `channel`
 - `N.live.off(channel [, handler])` - unsubscribe handler (or all) from channel
 
+
 Namespaces
 ----------
 
-- `local.*` - used to communicate between tabs without server
-- `private.*` - post data to server without broadcast
+Client side specific things:
+
+- `local.*` - messages will go to local tabs only, and will not pass to server at all.
+- `private.*` - our internal conventions, for convenience. All posting should be
+   done only here.
+
 
 Server extensions
 -----------------
 
-To extend actions (subscribe and post):
+Every incoming message (subscribe/post) from client is forwarded to internal
+methods.
 
-- `internal.live.subscribe:{channel.name}` - to check subscribe permission 
+- `internal.live.subscribe:{channel.name}` - check subscribe permission
 - `internal.live.post:{channel.name}` - to handle message from client
+
+Current files location:
 
 ```none
 .
@@ -34,25 +49,29 @@ To extend actions (subscribe and post):
             └─ subscribe/*.js
 ```
 
+Code example:
+
 ```javascript
-  N.wire.on('internal.live.subscribe:users.private.*', function (data, callback) {
-    // check permission...
-    data.allowed = true;
-    callback();
-  });
+N.wire.on('internal.live.subscribe:forum.topic.*', function (data, callback) {
+  // check permission...
+  data.allowed = true;
+  callback();
+});
 ```
 
 Data object:
 
-- __allowed__ (Boolean) - `false` by default, server handler should check permission and set to `true`
+- __allowed__ (Boolean) - `false` by default, server handler should check
+  permission and set to `true`
 - __message__ (Object)
   - __data__ (Object) - data received from client
 - __channel__ (String) - channel name
 - __getSession__ (Function) - `function (err, session)`,
   [session loader helper](https://github.com/nodeca/nodeca.core/blob/pos/internal/common/live/session.js)
 
-Channels example
-----------------
+
+Channels examples
+-----------------
 
 - `private.core.marker.set_scroll` - set scroll position in topic and etc.
 - `forum.topic.{topic_hid}` - topic updates
