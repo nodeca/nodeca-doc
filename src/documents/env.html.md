@@ -65,7 +65,6 @@ env                     # `this` context of actions/filters
 
   res                   # response sandbox:
     head                # (optional) { title: null }, data for html head
-    blocks              # widgets data (breadcrumbs and so on)
     menus               # (http only) static menus
     layout              # (http only) site layout
     settings            # (optional) settings/permissions
