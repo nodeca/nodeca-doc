@@ -15,6 +15,7 @@ Methods
 -------
 
 - `N.live.emit(channel, data)` - sends data into the `channel`
+- `N.live.debounce(channel, data)` - __server only__. Filer messages via debouncer (3 sec) and send then
 - `N.live.on(channel, handler)` - registers `handler` to be executed upon messages in the `channel`
 - `N.live.off(channel [, handler])` - unsubscribe handler (or all) from channel
 
