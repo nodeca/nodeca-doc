@@ -80,8 +80,9 @@ env                     # `this` context of actions/filters
     content                 # rendered part of page, for embedding into layout
     set_layout(name)        # allows to change default page layout
     link_to(name[, params]) # `N.runtime.route.linkTo` alias for templates
-    asset_path(path)        # returns path to Mincer's asset
-    asset_include(path)     # returns compiled Mincer's asset as a string
+    asset_url(path)         # returns url for asset (wrapper over `N.asset.asset_url()`)
+    asset_body(path)        # returns compiled asset as a string (wrapper
+                            # over `N.asset.asset_body()`)
     date                    # date manipulation helper
     add_raw_data(key, val)  # add new key into `runtime.page_data` object (see below)
 

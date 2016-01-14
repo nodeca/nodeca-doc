@@ -43,10 +43,10 @@ N
   config                  # parsed config file
 
   assets                  # assets-related data
-    environment           # Mincer.Environmant instanse
-    manifest              # Mincer manifest of assets
-    server                # distribution map for `loadAssets.init`
-    distribution
+    files                 # array of assets info (path, digest)
+    distribution          # assets info for loader
+    asset_url(path)       # returns url for asset
+    asset_body(path)      # returns compiled asset as a string
 
   validate                # rpc/http params validator
 
