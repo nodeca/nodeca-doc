@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>i18n | Nodeca</title>
+  <meta charset="utf-8">
+  <meta name="generator" content="DocPad v6.78.4" />
+  <link  rel="stylesheet" href="./styles/style.css" />
+</head>
+<body>
+  <ul class='sidebar'>
+    
+      <li class="inactive">
+        <a href="./app-files.html">App Files &amp; Dirs</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./app-bundler.html">Bundler</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./configs.html">Config files</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cli-tools.html">CLI (console tools)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./database.html">Database</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-structures.html">N.*</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-wire.html">N.wire (message bus)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-live.html">N.live (realtime)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules.html">Modules &amp; helpers</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-server.html">Modules - Server</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-client.html">Modules - Client</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./requests.html">HTTP/RPC requests</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./env.html">env (in requests)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./router.html">Router</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cookies.html">Cookies</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./models.html">Models</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./settings.html">Settings</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./menus.html">Menus</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./debugging.html">Debug</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./notifications.html">Notifications</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./testing.html">Testing</a>
+      </li>
+    
+      <li class="active">
+        <a href="./i18n.html">i18n</a>
+      </li>
+    
+  </ul>
+  <div class="content">
+    <div class="page-header">
+      <h1>i18n</h1>
+    </div>
+    <p>Translation are <code>.yml</code> files, containing nested structures. Path masks are
+defined in application&#39;s <code>bundle.yml</code> configs.</p>
+<p>All files are joined together and &quot;flattened&quot;:</p>
+<ul>
+<li>translation keys are combined as: &quot;path.to.folder.&quot; + &quot;nested.key.name&quot;</li>
+<li>if value string starts with <code>md:</code>, it&#39;s processed with markdowm:<ul>
+<li><code>foo: &quot;md: that&#39;s a [link](/foo/bar)</code>.</li>
+</ul>
+</li>
+<li>if any key in <code>.yml</code> file prefixed with <code>=</code>, content is considered as object,
+not as string:<ul>
+<li><code>=foo: [ &#39;bar, baz&#39; ]</code>.</li>
+</ul>
+</li>
+</ul>
+<p>Phrases are processed with <a href="https://github.com/nodeca/babelfish/">babelfish</a>.</p>
+<h2 id="helpers">Helpers</h2>
+<h3 id="translations">Translations</h3>
+<ul>
+<li><code>env.t()</code> and <code>self.t()</code> (in templates) accept relative paths (relative to
+current folder.</li>
+<li>if you need &quot;absolute&quot; name - add <code>@</code> to start:<ul>
+<li><code>env.t(&#39;@foo.bar&#39;, params)</code></li>
+</ul>
+</li>
+<li>to make relative paths work in templates, render subtemplates only with
+<code>self.partial()</code> helper.</li>
+</ul>
+<h3 id="dates">Dates</h3>
+<p>Templates have <code>self.date(time, formatName)</code> helper, which supports localized
+time in different formats. Currently configured formats are:</p>
+<ul>
+<li><code>date</code>, <code>time</code>, <code>datetime</code>, <code>compact</code>, <code>relative</code>. See
+<a href="https://github.com/nodeca/nodeca.core/blob/master/config/locales/l10n.en.yml">definition</a>.</li>
+<li>By default &#39;relative&#39; format will be used.</li>
+<li>For available &quot;subintervals&quot; for relative time configuration see
+<a href="https://github.com/nodeca/nodeca.core/blob/master/lib/system/date_formatter.js">DateFormatter</a> src.</li>
+</ul>
+
+    <script defer="defer"  src="./vendor/jquery.js"></script><script defer="defer"  src="./scripts/script.js"></script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bundler | Nodeca</title>
+  <meta charset="utf-8">
+  <meta name="generator" content="DocPad v6.78.4" />
+  <link  rel="stylesheet" href="./styles/style.css" />
+</head>
+<body>
+  <ul class='sidebar'>
+    
+      <li class="inactive">
+        <a href="./app-files.html">App Files &amp; Dirs</a>
+      </li>
+    
+      <li class="active">
+        <a href="./app-bundler.html">Bundler</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./configs.html">Config files</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cli-tools.html">CLI (console tools)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./database.html">Database</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-structures.html">N.*</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-wire.html">N.wire (message bus)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-live.html">N.live (realtime)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules.html">Modules &amp; helpers</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-server.html">Modules - Server</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-client.html">Modules - Client</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./requests.html">HTTP/RPC requests</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./env.html">env (in requests)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./router.html">Router</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cookies.html">Cookies</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./models.html">Models</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./settings.html">Settings</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./menus.html">Menus</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./debugging.html">Debug</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./notifications.html">Notifications</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./testing.html">Testing</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./i18n.html">i18n</a>
+      </li>
+    
+  </ul>
+  <div class="content">
+    <div class="page-header">
+      <h1>Bundler</h1>
+    </div>
+    <h2 id="resourses">Resourses</h2>
+<p>Each application has <code>bundle.yml</code> in the root dir. It defines resources
+roots &amp; bundling rules.</p>
+<p>In each resource dir we have <code>config.yml</code>. It defines resource
+files and options. Currently, we know:</p>
+<ul>
+<li><code>recursive</code> - scan sub folders</li>
+<li><code>public</code> - will be loaded on client and server side if <code>true</code> (only server side if <code>false</code>)</li>
+<li><code>inherit</code> - use parent folder config (default <code>true</code>)</li>
+<li><code>type</code><ul>
+<li><code>widget_css</code> - CSS</li>
+<li><code>widget_i18n</code> - translations</li>
+<li><code>widget_view</code> - templates</li>
+<li><code>widget_js</code> - client side JS (wrapped as client modules)</li>
+<li><code>js</code> - client side JS (not wrapped)</li>
+<li><code>bin</code> - static files of any types</li>
+</ul>
+</li>
+</ul>
+<p>We process resources in 3 steps (first two are not mandatory):</p>
+<ol>
+<li>Scan folders in deep (for JS/CSS/templates/translations) &amp; process tree</li>
+<li>Compile files, and create <code>manifest.json</code> for next step</li>
+<li>Load assets info from <code>manifest.json</code></li>
+</ol>
+<p>That helps to combine application modules with external &#39;old-style&#39; libraries
+(jquery, twitter bootstrap, and others).</p>
+<p><strong>NOTE</strong>. We CAN&#39;T guarantee order of JS/CSS for client modules. Only for wraper.
+But we have lazy-coupling event-driven init &amp; <a href="http://bem.info/">BEM</a>-style
+notation for CSS. That prevents possible conflicts.</p>
+<h2 id="packages">Packages</h2>
+<p>Every set of resources is named <code>package</code>. Usually, each application has 1
+custom package &amp; extends <code>admin</code> package. But there are no special limits.</p>
+<h2 id="bundles">Bundles</h2>
+<p>To load resources fast, we need to minimaze file count on the client. So,
+we join multiple resources &amp; packages into single CSS/JS files.</p>
+<p>Currently, we have <code>frontend</code> &amp; <code>backend</code> bundles. Also, separate bundle will
+be available for heavy WISYWIG editor, that&#39;s not required on first load.</p>
+<h2 id="bundler-config-example">Bundler config example</h2>
+<p>That&#39;s a real file from <code>nodeca.core</code> application.</p>
+<pre class="highlight"><code class="hljs no-highlight">bundles:
+  lib:
+    - lib
+
+  frontend:
+    - l10n
+    - lib-frontend
+    - common
+
+  backend:
+    - l10n
+    - lib-admin
+    - admin
+
+  mdedit:
+    - mdedit
+
+packages:
+
+  admin:
+    depends:
+      - lib
+      - l10n
+      - lib-admin
+    entries:
+      - client/admin
+      - server/admin
+
+  common:
+    depends:
+      - lib
+      - l10n
+    entries:
+      - client/common
+      - server/common
+
+  lib:
+    vendor:
+      # shared
+      - lodash
+      - async
+      - jquery
+      - knockout
+      - event-wire
+      - co
+      - steady # scroll tracker
+      - raf.js
+      - faye/browser/faye-browser
+      - tabex
+      # stub for jade runtime
+      - fs: nodeca.core/lib/system/dummy.js
+      # reuse global bug.js from the loader
+      - bag.js: nodeca.core/lib/bag.js
+      # Used by kernel &amp; DateFormatter
+      - babelfish
+
+    entries: client/lib
+
+  lib-admin:
+    entries: client/lib-admin
+
+  lib-frontend:
+    entries: client/lib-frontend
+
+  l10n: {}
+
+  mdedit:
+    entries: client/mdedit
+</code></pre>
+<p>Client resource root <code>config.yml</code> example.</p>
+<pre class="highlight"><code class="hljs no-highlight">recursive: true
+public: true
+type:
+  widget_css:
+    - &quot;*.css&quot;
+    - &quot;*.styl&quot;
+    - &quot;*.less&quot;
+  widget_i18n: i18n/*.yml
+  widget_view: &quot;*.jade&quot;
+  widget_js: &quot;*.js&quot;
+</code></pre>
+<p>Server resource root <code>config.yml</code> example.</p>
+<pre class="highlight"><code class="hljs no-highlight">recursive: true
+public: false
+type:
+  widget_i18n: i18n/*.yml
+  widget_view: &quot;*.jade&quot;
+</code></pre>
+
+    <script defer="defer"  src="./vendor/jquery.js"></script><script defer="defer"  src="./scripts/script.js"></script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Settings | Nodeca</title>
+  <meta charset="utf-8">
+  <meta name="generator" content="DocPad v6.78.4" />
+  <link  rel="stylesheet" href="./styles/style.css" />
+</head>
+<body>
+  <ul class='sidebar'>
+    
+      <li class="inactive">
+        <a href="./app-files.html">App Files &amp; Dirs</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./app-bundler.html">Bundler</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./configs.html">Config files</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cli-tools.html">CLI (console tools)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./database.html">Database</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-structures.html">N.*</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-wire.html">N.wire (message bus)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-live.html">N.live (realtime)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules.html">Modules &amp; helpers</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-server.html">Modules - Server</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-client.html">Modules - Client</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./requests.html">HTTP/RPC requests</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./env.html">env (in requests)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./router.html">Router</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cookies.html">Cookies</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./models.html">Models</a>
+      </li>
+    
+      <li class="active">
+        <a href="./settings.html">Settings</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./menus.html">Menus</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./debugging.html">Debug</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./notifications.html">Notifications</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./testing.html">Testing</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./i18n.html">i18n</a>
+      </li>
+    
+  </ul>
+  <div class="content">
+    <div class="page-header">
+      <h1>Settings</h1>
+    </div>
+    <p>Each <strong>setting</strong> is simple value, combined from multiple sources. For example,
+value <code>can_create_forum_post</code> depends on:</p>
+<ul>
+<li>member user groups</li>
+<li>current forum</li>
+<li>sometime, current thread</li>
+</ul>
+<p>When we need to calculate setting value:</p>
+<ol>
+<li>user provides setting name (or list) AND additional parameter
+(user_id, forum_id, ...)</li>
+<li>(value,type) are fetched from every store, defined in schema (type = OR/AND)</li>
+<li>fetched values are combined (first, by OR, then by AND)</li>
+</ol>
+<h2 id="setting-stores">Setting stores</h2>
+<ul>
+<li><strong>global</strong> (key) - maps settings from config file, to use in filters</li>
+<li><strong>usergroup</strong> (key, [group1_id, ...]) - stores permissions of user groups.
+Supports &quot;restrictive&quot; groups.</li>
+<li><strong>forum_usergroup</strong> (key, [group1_id, ...], forum_id) - stores permissions
+of user groups for specific forum.</li>
+<li><strong>app_users</strong> (key, application, user_id) - stores user lists for applications
+(for example, lists of local administrators/moderators). Has boolean interface
+(check specific user in list, or add/remove user)</li>
+</ul>
+<p>For every setting, store returns &quot;vector&quot;:</p>
+<ul>
+<li>setting value</li>
+<li>combining type (OR/AND) - specific for each store.</li>
+</ul>
+<p>Every store type is defined by combination of parameters, needed to extract
+setting. That&#39;s unique for well-designed system.</p>
+<p>In database, each store is usually binded to &#39;setting&#39; field of appropriate
+document. It real life, you should not care about store deal, because you&#39;ll
+reuse existing ones. Settings are defined in config yaml files. Each file can
+contain multiple settings. We prefer to group those by roles or by store.</p>
+<p>Note, that many fields from yaml config are used only in Admin Control Panel.</p>
+<h2 id="setting-definition">Setting definition</h2>
+<ul>
+<li>setting_schemas:<ul>
+<li><strong>store_name</strong> - Setting store name (e.g. <code>usergroups</code>)<ul>
+<li><strong>key</strong> (unique) - Setting key name (e.g. <code>can_modify_topic</code>)<ul>
+<li><strong>extends</strong> (default = false)- When <code>true</code>, means that setting combined
+from several stores. Missed properties taken from base definition.</li>
+<li><strong>type</strong>
+(<code>boolean</code>|<code>string</code>|<code>text</code>|<code>wysiwyg</code>|<code>number</code>|<code>dropdown</code>|<code>combobox</code>,
+required) - Type of the setting.</li>
+<li><strong>default</strong> - Default value. If not set, &quot;empty&quot; value used (false, 0, &quot;&quot;, [], and so on)</li>
+<li><strong>category_key</strong> - used to combine settings in list, inside ACP</li>
+<li><strong>group_key</strong> - used split settings by tabs and groups, for better navigation</li>
+<li><strong>priority</strong> (default = 10) - Ordering priority for ACP</li>
+<li><strong>values</strong> - array of key-value pairs (like <code>value_id: &quot;Value String&quot;</code>)
+or name of dynamic values fetcher function (only <code>&quot;usergroups&quot;</code> is
+available for now) for <code>dropdown</code> and <code>combobox</code> types</li>
+<li><strong>validators</strong>
+(<code>required</code>|<code>numeric</code>|<code>integer</code>|<code>positive_integer</code>|<code>regexp</code>|<code>custom</code>,
+optional) - <em>TBD</em> reserved for future use</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><code>category_key</code> - used to combine settings on long page. <code>group_key</code> - used to combine
+settings in tabs &amp; groups.</p>
+<h2 id="setting-group-definition">Setting group definition</h2>
+<p>Global setting are combined in tabs &amp; groups on control panel. That does not affect
+settings logic, and used only in interface</p>
+<ul>
+<li>setting_groups:<ul>
+<li><strong>group_key</strong><ul>
+<li><strong>parent</strong> - empty for tabs, tab_key for groups</li>
+<li><strong>priority</strong> - order</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="i18n">i18n</h2>
+<p>Paths for settings localizations:</p>
+<ul>
+<li><code>admin.core.setting_names.&lt;name&gt;</code> for setting name itself</li>
+<li><code>admin.core.setting_names.&lt;name&gt;_help</code> for help phrase (description)</li>
+<li><code>admin.core.group_names.&lt;name&gt;</code> for setting group name</li>
+<li><code>admin.core.category_names.&lt;name&gt;</code> for setting category name</li>
+</ul>
+<p>Note, we considet, that settings, groups &amp; categories has unique IDs. So,
+start group id with &quot;grp<em>&quot; and categories with &quot;cat</em>&quot; prefixes.</p>
+<h2 id="example">Example</h2>
+<pre class="highlight"><code class="hljs less"><span class="hljs-attribute">---</span>
+<span class="hljs-attribute">setting_schemas</span>:
+  <span class="hljs-attribute">global</span>:
+    <span class="hljs-attribute">threads_per_page</span>:
+      <span class="hljs-attribute">type</span>: number
+      <span class="hljs-attribute">default</span>: <span class="hljs-number">30</span>
+      <span class="hljs-attribute">group</span>: forum
+
+    <span class="hljs-attribute">posts_per_page</span>:
+      <span class="hljs-attribute">type</span>: number
+      <span class="hljs-attribute">default</span>: <span class="hljs-number">25</span>
+      <span class="hljs-attribute">group</span>: thread
+
+<span class="hljs-attribute">setting_groups</span>:
+  <span class="hljs-attribute">tab_system</span>:
+    <span class="hljs-attribute">priority</span>: <span class="hljs-number">0</span>
+  <span class="hljs-attribute">grp_forum</span>:
+    <span class="hljs-attribute">parent</span>: tab_system
+    <span class="hljs-attribute">priority</span>: <span class="hljs-number">10</span>
+  <span class="hljs-attribute">grp_topic</span>:
+    <span class="hljs-attribute">parent</span>: tab_system
+    <span class="hljs-attribute">priority</span>: <span class="hljs-number">20</span>
+</code></pre><pre class="highlight"><code class="hljs less"><span class="hljs-attribute">i18n</span>:
+  <span class="hljs-attribute">en-US</span>:
+    <span class="hljs-attribute">admin</span>:
+      <span class="hljs-attribute">setting</span>:
+        <span class="hljs-attribute">tab_system</span>: System
+        <span class="hljs-attribute">grp_forum</span>: Forum
+        <span class="hljs-attribute">grp_thread</span>: Thread
+
+        <span class="hljs-attribute">threads_per_page</span>: Threads per page
+        <span class="hljs-attribute">threads_per_page_help</span>: Default number of displayed thread 
+
+        <span class="hljs-attribute">posts_per_page</span>: Posts per page
+        <span class="hljs-attribute">posts_per_page_help</span>: Default number of displayed posts
+</code></pre><h2 id="api">API</h2>
+<p>TBD</p>
+
+    <script defer="defer"  src="./vendor/jquery.js"></script><script defer="defer"  src="./scripts/script.js"></script>
+  </div>
+</body>
+</html>

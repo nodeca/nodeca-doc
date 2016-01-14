@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Modules &amp; helpers | Nodeca</title>
+  <meta charset="utf-8">
+  <meta name="generator" content="DocPad v6.78.4" />
+  <link  rel="stylesheet" href="./styles/style.css" />
+</head>
+<body>
+  <ul class='sidebar'>
+    
+      <li class="inactive">
+        <a href="./app-files.html">App Files &amp; Dirs</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./app-bundler.html">Bundler</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./configs.html">Config files</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cli-tools.html">CLI (console tools)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./database.html">Database</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-structures.html">N.*</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-wire.html">N.wire (message bus)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-live.html">N.live (realtime)</a>
+      </li>
+    
+      <li class="active">
+        <a href="./modules.html">Modules &amp; helpers</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-server.html">Modules - Server</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-client.html">Modules - Client</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./requests.html">HTTP/RPC requests</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./env.html">env (in requests)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./router.html">Router</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cookies.html">Cookies</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./models.html">Models</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./settings.html">Settings</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./menus.html">Menus</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./debugging.html">Debug</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./notifications.html">Notifications</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./testing.html">Testing</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./i18n.html">i18n</a>
+      </li>
+    
+  </ul>
+  <div class="content">
+    <div class="page-header">
+      <h1>Modules &amp; helpers</h1>
+    </div>
+    <p>Application structure is inspired by different &quot;scaleable&quot; metodologies.
+In practice that means:</p>
+<ul>
+<li>Split all to independed modules (can be nested)</li>
+<li>All module resources (js, views, i18n, ...) are in single folder</li>
+<li>Avoid global modules availability - use events or local requires</li>
+<li>Use FS path to calculate resource path, for convenience.</li>
+</ul>
+<p>That&#39;s acheived by advanced bundler. Note, that we don&#39;t have local config
+for each module, as in <a href="http://bem.info/">BEM</a>. Instead, we use global
+rules for each resource type (in <code>bundle.yml</code>). That&#39;s more simple in our case.</p>
+<p>See <code>Bundler</code> section for details.</p>
+<h2 id="local-helpers-to-simplify-resources-include">Local helpers, to simplify resources include</h2>
+<p>We support extentions for jade / stylus / i18n, to simplify files references:</p>
+<ul>
+<li><code>@</code> means root of package:<ul>
+<li><code>@/path</code> - from the root of current package</li>
+<li><code>@package/path</code> - from the root of foreign package</li>
+</ul>
+</li>
+<li>i18n names are relative to current module, by default</li>
+<li>on client side, <code>require</code> automatically bundle code. <code>bundle.yml</code> can define
+location of bundled module</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li><code>require</code> in node is NOT extended. Use <code>require(&#39;&lt;node.module&gt;/path/to/file&#39;)</code>,
+ it&#39;s enougth</li>
+<li><code>require</code> in client<ul>
+<li>understands relative paths and node.modules names (works as on server)</li>
+<li>bundles code</li>
+</ul>
+</li>
+<li><code>self.partial(template[, locals])</code> in jade<ul>
+<li>understands <code>@</code></li>
+<li>allow to render relative i18n paths</li>
+</ul>
+</li>
+<li><code>import</code> in stylus<ul>
+<li>understands relative paths and node.modules names (works as on server)</li>
+</ul>
+</li>
+</ul>
+<p>See <code>env.helpers</code> in <a href="modules-server.html">server modules</a> for standard functions</p>
+<h2 id="views-rendering">Views Rendering</h2>
+<p>In the server, views renderer is an after-filter middleware. Render expect
+environment to contain <code>response</code> object (see Request Environment) with properties:</p>
+<ul>
+<li><strong>data</strong> raw output data (used as JSON output or as sandbox for views)</li>
+<li><strong>layout</strong> name to use (when rendering HTML)</li>
+<li><strong>view</strong> name to use (when rendering HTML or sending data to the client)</li>
+</ul>
+<p>Rendering consists of 2 steps:</p>
+<ol>
+<li>Rendering page inner</li>
+<li>Embedding it into layout</li>
+</ol>
+<p>On client side, process looks similar, but automated via <code>navigate.to</code> listener.</p>
+<h3 id="layouts">Layouts</h3>
+<p>Usually, page wrapper (layout) is set by hook for all pages of <code>server:**</code> methods.
+But u can customize it as you wish from your template via <code>set_layout()</code> helper.</p>
+<p>Layout looks like usual client block, wich wraps <code>content</code> variable.</p>
+
+    <script defer="defer"  src="./vendor/jquery.js"></script><script defer="defer"  src="./scripts/script.js"></script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Testing | Nodeca</title>
+  <meta charset="utf-8">
+  <meta name="generator" content="DocPad v6.78.4" />
+  <link  rel="stylesheet" href="./styles/style.css" />
+</head>
+<body>
+  <ul class='sidebar'>
+    
+      <li class="inactive">
+        <a href="./app-files.html">App Files &amp; Dirs</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./app-bundler.html">Bundler</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./configs.html">Config files</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cli-tools.html">CLI (console tools)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./database.html">Database</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-structures.html">N.*</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-wire.html">N.wire (message bus)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-live.html">N.live (realtime)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules.html">Modules &amp; helpers</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-server.html">Modules - Server</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-client.html">Modules - Client</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./requests.html">HTTP/RPC requests</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./env.html">env (in requests)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./router.html">Router</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cookies.html">Cookies</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./models.html">Models</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./settings.html">Settings</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./menus.html">Menus</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./debugging.html">Debug</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./notifications.html">Notifications</a>
+      </li>
+    
+      <li class="active">
+        <a href="./testing.html">Testing</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./i18n.html">i18n</a>
+      </li>
+    
+  </ul>
+  <div class="content">
+    <div class="page-header">
+      <h1>Testing</h1>
+    </div>
+    <p>Tests are locatet in <code>./test</code> folder, and follow project structure for
+convenience:</p>
+<pre class="highlight"><code class="hljs axapta">├─ test/
+│   ├─ <span class="hljs-keyword">client</span>/ <span class="hljs-preprocessor"># UI tests</span>
+│   ├─ models/ <span class="hljs-preprocessor"># Unit tests</span>
+│   └─ <span class="hljs-keyword">server</span>/ <span class="hljs-preprocessor"># Integration (RPC) tests</span>
+</code></pre><p>Nodeca exposes some global variables &amp; helpers both on server and client
+envicoment, to simplify tests writing.</p>
+<p>Sources for addons are here: <a href="https://github.com/nodeca/nodeca.core/tree/master/lib/test">https://github.com/nodeca/nodeca.core/tree/master/lib/test</a>.</p>
+<h2 id="server-env">Server env</h2>
+<ul>
+<li><code>TEST.N</code>       - <code>N</code>.</li>
+<li><code>TEST.browser</code> - patched instance of <a href="http://www.nightmarejs.org/">Nightmare</a>
+(to write client side tests).</li>
+</ul>
+<p><a href="http://www.nightmarejs.org/">Nightmare</a> is patched, to use specific nodeca
+features.</p>
+<p><strong>Overriden <code>Nightmare</code> methods:</strong></p>
+<ul>
+<li><code>.goto(url)</code><ul>
+<li>url can be a function</li>
+<li>wait for client initialization (<code>NodecaLoader.booted</code>)</li>
+<li>install client asserts interceptor</li>
+<li>set viewport to 1600x1200</li>
+</ul>
+</li>
+<li><code>refresh()</code><ul>
+<li>the same additional actions as <code>.goto()</code> does.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Additional <code>Nightmare</code> methods:</strong></p>
+<ul>
+<li><code>.evaluateAsync(func, callback [, arg1, arg2...])</code> - see <code>evaluate</code>
+ Nightmare&#39;s docs for details.</li>
+<li><code>.auth(login, callback)</code><ul>
+<li><code>login</code> - nickname or User object. Creates user if not exists and login.
+ Logout on empty value.</li>
+<li><code>callback(user)</code> - optional, function to call after success.</li>
+</ul>
+</li>
+</ul>
+<h3 id="client-env">Client env</h3>
+<ul>
+<li><code>TEST.N</code>  - <code>N</code></li>
+<li><code>assert</code>  - <a href="http://chaijs.com/">Chai</a> assert. You can do asert in any part
+of client code. It will be pased to server and processed by testing suite.</li>
+<li><code>trigger</code> - Helper to click selector and listen specific N.wire channel
+to detect operation end. That&#39;s more convenient and effective, than use
+Nightmare&#39;s <code>.wait()</code>.</li>
+</ul>
+
+    <script defer="defer"  src="./vendor/jquery.js"></script><script defer="defer"  src="./scripts/script.js"></script>
+  </div>
+</body>
+</html>

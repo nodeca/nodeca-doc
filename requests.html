@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HTTP/RPC requests | Nodeca</title>
+  <meta charset="utf-8">
+  <meta name="generator" content="DocPad v6.78.4" />
+  <link  rel="stylesheet" href="./styles/style.css" />
+</head>
+<body>
+  <ul class='sidebar'>
+    
+      <li class="inactive">
+        <a href="./app-files.html">App Files &amp; Dirs</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./app-bundler.html">Bundler</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./configs.html">Config files</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cli-tools.html">CLI (console tools)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./database.html">Database</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-structures.html">N.*</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-wire.html">N.wire (message bus)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-live.html">N.live (realtime)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules.html">Modules &amp; helpers</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-server.html">Modules - Server</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-client.html">Modules - Client</a>
+      </li>
+    
+      <li class="active">
+        <a href="./requests.html">HTTP/RPC requests</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./env.html">env (in requests)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./router.html">Router</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cookies.html">Cookies</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./models.html">Models</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./settings.html">Settings</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./menus.html">Menus</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./debugging.html">Debug</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./notifications.html">Notifications</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./testing.html">Testing</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./i18n.html">i18n</a>
+      </li>
+    
+  </ul>
+  <div class="content">
+    <div class="page-header">
+      <h1>HTTP/RPC requests</h1>
+    </div>
+    <p>All requests pass vie several nested stages:</p>
+<ol>
+<li><strong>Responder</strong> - (HTTP/RPC/WS/..) converts requests/responses from different
+sources to unified format.</li>
+<li><strong>Server chain wrapper</strong> - (optional) used to assign hooks for dynamic pages
+(exclude files, like assets/static).</li>
+<li><strong>server</strong> or <strong>server_bin</strong> chain - methods for dynamic pages and static
+files.</li>
+</ol>
+<p>Example:</p>
+<pre class="highlight"><code class="hljs nimrod">http start -&gt; wrapper start -&gt; <span class="hljs-keyword">method</span> -&gt; wrapper <span class="hljs-keyword">end</span> -&gt; http <span class="hljs-keyword">end</span>
+</code></pre><ul>
+<li>RPC data is not rendered, and returned as JSON</li>
+<li>low-level request info is located in <code>env.origin.rpc</code> or <code>env.origin.http</code></li>
+</ul>
+<h2 id="request-end-redirect-terminate">Request end / redirect / terminate</h2>
+<p>It&#39;s possible to terminate request chain by passing error as callback argument.
+You can control status code, headers and body by passing an <code>Object</code> with
+following fields:</p>
+<ul>
+<li><strong>code</strong> (Number) - Status code</li>
+<li><strong>head</strong> (Object, optional) - Response headers, e.g. <code>{ Location: &#39;/foobar&#39; }</code></li>
+<li><strong>data</strong> (Object|String, optional) - Response data (object will be converted to JSON)</li>
+</ul>
+<p>Sugar:</p>
+<ul>
+<li><code>callback(number)</code> is equal to <code>callback({code: number})</code></li>
+<li><code>callback(string)</code> or <code>callback(new Error(...))</code> are equal to <code>callback({code: 500, data: ...})</code></li>
+</ul>
+<p><strong>NOTE</strong> Available status codes are defined in  <a href="https://github.com/nodeca/nodeca.core/blob/master/lib/system/io.js">N.io</a></p>
+<p>Redirect example:</p>
+<pre class="highlight"><code class="hljs javascript">...
+callback({
+  code: N.io.REDIRECT,
+  head: {
+    <span class="hljs-string">"Location"</span>: N.runtime.router.linkTo(env.request.method, {
+      id:   env.params.id,
+      page: max
+    })
+  }
+});
+<span class="hljs-keyword">return</span>;
+</code></pre>
+<h2 id="adding-cache-support">Adding cache support</h2>
+<p>By default, no cache exists, except for static/assets servers. But you can extend
+support for some responders, to improve performance.</p>
+<h3 id="cache-static-content">Cache static content</h3>
+<p>Those MUST have unique name for each unique content. Then we set</p>
+<pre class="highlight"><code class="hljs http"><span class="hljs-attribute">Cache-Control</span>: <span class="hljs-string">public, maxage=31536000</span>
+<span class="hljs-attribute">Vary</span>: <span class="hljs-string">Accept-Encoding (for compressable data)</span>
+<span class="hljs-attribute">ETag</span>: <span class="hljs-string">xxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+</code></pre><p><strong>NOTE</strong>. In clustered environment, file date should not be used to calculate ETag.</p>
+<h3 id="cache-dynamic-data">Cache dynamic data</h3>
+<p>Dynamic pages mostly depends on user id &amp; language. That should be cared, if
+someone like to make dynamic pages cacheable. You should directly specify
+headers for pages, that should use cache advantages:</p>
+<pre class="highlight"><code class="hljs http"><span class="hljs-attribute">Cache-Control</span>: <span class="hljs-string">private, max-age=0, must-revalidate</span>
+<span class="hljs-attribute">ETag</span>: <span class="hljs-string">[contend_id]-[user_id]-[lang_id]-[theme_id]</span>
+</code></pre><ul>
+<li>NO <code>Last-Modified</code> (suppress HTTP/1.0 caches)</li>
+<li>NEVER use <code>Expires</code> - it can fuckup user difference, if behind HTTP/1.0 cache.</li>
+</ul>
+<p>Renderer checks if <code>env.response.headers[&#39;ETag&#39;]</code> === 
+<code>env.http.req.headers[&#39;if-none-match&#39;]</code>, and skip rendering phase if necessary.
+But it&#39;s still your responsibility to fill <code>ETag</code> &amp; <code>Cache-Control</code> fields.</p>
+<p><strong>NOTE</strong> Page content can depend on user avatars. It&#39;s not correct to cache such
+pages more than several days (to avoid VERY complex dependencies).</p>
+<h3 id="cache-404-410-pages">Cache 404, 410 pages</h3>
+<ul>
+<li>Set infinity cache for <code>not found</code> binary files (public)</li>
+<li>Set 1 year cache for invalid pages, <strong>missed from router paths</strong></li>
+<li>DON&#39;T set 404 cache time for pages, that CAN depend on user permissions
+(all other pages). Use the same strategy, as for &quot;working&quot; pages.</li>
+</ul>
+<h3 id="head-requests-optimization">HEAD requests optimization</h3>
+<ol>
+<li>Renderer returns empty body on HEAD requests.</li>
+<li>Assets are optimized too.</li>
+</ol>
+<p>If you add new type of binary responder - take care about HEADs.</p>
+<h2 id="rpc-protocol-spec">RPC protocol spec</h2>
+<h3 id="request">Request</h3>
+<p><code>$.post(&#39;/io/rpc&#39;, payload)</code></p>
+<pre class="highlight"><code class="hljs no-highlight">version_hash  # assets hash to force client reload
+csrf          # CSRF token (received on page load via HTTP)
+methods       # PRC method name (`forum.post`)
+params        # RPC call params
+</code></pre>
+<h3 id="reply">Reply</h3>
+<pre class="highlight"><code class="hljs no-highlight">version_hash  # assets hash
+error         # env.err if exists
+response      # env.response (if no error)
+  layout      # needed to render ajax
+  view        # optional, = method by default
+  data        # env.response.data
+</code></pre>
+
+    <script defer="defer"  src="./vendor/jquery.js"></script><script defer="defer"  src="./scripts/script.js"></script>
+  </div>
+</body>
+</html>

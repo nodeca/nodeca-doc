@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>N.live (realtime) | Nodeca</title>
+  <meta charset="utf-8">
+  <meta name="generator" content="DocPad v6.78.4" />
+  <link  rel="stylesheet" href="./styles/style.css" />
+</head>
+<body>
+  <ul class='sidebar'>
+    
+      <li class="inactive">
+        <a href="./app-files.html">App Files &amp; Dirs</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./app-bundler.html">Bundler</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./configs.html">Config files</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cli-tools.html">CLI (console tools)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./database.html">Database</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-structures.html">N.*</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-wire.html">N.wire (message bus)</a>
+      </li>
+    
+      <li class="active">
+        <a href="./n-live.html">N.live (realtime)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules.html">Modules &amp; helpers</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-server.html">Modules - Server</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-client.html">Modules - Client</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./requests.html">HTTP/RPC requests</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./env.html">env (in requests)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./router.html">Router</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cookies.html">Cookies</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./models.html">Models</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./settings.html">Settings</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./menus.html">Menus</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./debugging.html">Debug</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./notifications.html">Notifications</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./testing.html">Testing</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./i18n.html">i18n</a>
+      </li>
+    
+  </ul>
+  <div class="content">
+    <div class="page-header">
+      <h1>N.live (realtime)</h1>
+    </div>
+    <p>Used to:</p>
+<ul>
+<li>get instant server messages (notifications about updates)</li>
+<li>store small user data without creating new requests every time
+(scroll positions, activities and so on).</li>
+</ul>
+<h2 id="methods">Methods</h2>
+<ul>
+<li><code>N.live.emit(channel, data)</code> - sends data into the <code>channel</code></li>
+<li><code>N.live.debounce(channel, data)</code> - <strong>server only</strong>. Filer messages via debouncer (3 sec) and send then</li>
+<li><code>N.live.on(channel, handler)</code> - registers <code>handler</code> to be executed upon messages in the <code>channel</code></li>
+<li><code>N.live.off(channel [, handler])</code> - unsubscribe handler (or all) from channel</li>
+</ul>
+<h2 id="namespaces">Namespaces</h2>
+<p>Client side specific things:</p>
+<ul>
+<li><code>local.*</code> - messages will go to local tabs only, and will not pass to server at all.</li>
+<li><code>private.*</code> - our internal conventions, for convenience. All posting should be
+ done only here.</li>
+</ul>
+<h2 id="server-extensions">Server extensions</h2>
+<p>Every incoming message (subscribe/post) from client is forwarded to internal
+methods.</p>
+<ul>
+<li><code>internal.live.subscribe:{channel.name}</code> - check subscribe permission</li>
+<li><code>internal.live.post:{channel.name}</code> - to handle message from client</li>
+</ul>
+<p>Current files location:</p>
+<pre class="highlight"><code class="hljs no-highlight">.
+└─ internal/
+    └─ &lt;namespace&gt;/
+        └─ live/
+            ├─ post/*.js
+            └─ subscribe/*.js
+</code></pre>
+<p>Code example:</p>
+<pre class="highlight"><code class="hljs javascript">N.wire.on(<span class="hljs-string">'internal.live.subscribe:forum.topic.*'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(data, callback)</span> </span>{
+  <span class="hljs-comment">// check permission...</span>
+  data.allowed = <span class="hljs-literal">true</span>;
+  callback();
+});
+</code></pre>
+<p>Data object:</p>
+<ul>
+<li><strong>allowed</strong> (Boolean) - <code>false</code> by default, server handler should check
+permission and set to <code>true</code></li>
+<li><strong>message</strong> (Object)<ul>
+<li><strong>data</strong> (Object) - data received from client</li>
+</ul>
+</li>
+<li><strong>channel</strong> (String) - channel name</li>
+<li><strong>getSession</strong> (Function) - <code>function (err, session)</code>,
+<a href="https://github.com/nodeca/nodeca.core/blob/pos/internal/common/live/session.js">session loader helper</a></li>
+</ul>
+<h2 id="channels-examples">Channels examples</h2>
+<ul>
+<li><code>private.core.marker.set_scroll</code> - set scroll position in topic and etc.</li>
+<li><code>forum.topic.{topic_hid}</code> - topic updates</li>
+<li><code>forum.section.{section_hid}</code> - section updates</li>
+</ul>
+
+    <script defer="defer"  src="./vendor/jquery.js"></script><script defer="defer"  src="./scripts/script.js"></script>
+  </div>
+</body>
+</html>

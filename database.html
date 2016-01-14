@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Database | Nodeca</title>
+  <meta charset="utf-8">
+  <meta name="generator" content="DocPad v6.78.4" />
+  <link  rel="stylesheet" href="./styles/style.css" />
+</head>
+<body>
+  <ul class='sidebar'>
+    
+      <li class="inactive">
+        <a href="./app-files.html">App Files &amp; Dirs</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./app-bundler.html">Bundler</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./configs.html">Config files</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cli-tools.html">CLI (console tools)</a>
+      </li>
+    
+      <li class="active">
+        <a href="./database.html">Database</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-structures.html">N.*</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-wire.html">N.wire (message bus)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-live.html">N.live (realtime)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules.html">Modules &amp; helpers</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-server.html">Modules - Server</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-client.html">Modules - Client</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./requests.html">HTTP/RPC requests</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./env.html">env (in requests)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./router.html">Router</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cookies.html">Cookies</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./models.html">Models</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./settings.html">Settings</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./menus.html">Menus</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./debugging.html">Debug</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./notifications.html">Notifications</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./testing.html">Testing</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./i18n.html">i18n</a>
+      </li>
+    
+  </ul>
+  <div class="content">
+    <div class="page-header">
+      <h1>Database</h1>
+    </div>
+    <h2 id="migrations">Migrations</h2>
+<h3 id="usage-cli-">Usage (CLI)</h3>
+<pre class="highlight"><code class="hljs bash">$ ./nodeca.js migrate          <span class="hljs-comment"># show available migration</span>
+$ ./nodeca.js migrate --all    <span class="hljs-comment"># apply pending</span>
+$ ./nodeca.js migrate -h       <span class="hljs-comment"># help</span>
+</code></pre>
+<h3 id="api">API</h3>
+<p>Migrations are stored in <code>./db/migrate</code> directory, one per file. File name
+format must be <code>YYYYMMDDhhmmss_&lt;migration-name&gt;.js</code>. Migrations run from old
+to new.</p>
+<pre class="highlight"><code class="hljs stylus">├─ db/migrate/
+│       ├─ <span class="hljs-number">20110919181104</span>_create_sections<span class="hljs-class">.js</span>
+│       └─ <span class="hljs-number">20120103183744</span>_create_threads<span class="hljs-class">.js</span>
+│
+</code></pre><p>Each migration script exports async method <code>up(N, callback)</code>.</p>
+<pre class="highlight"><code class="hljs javascript"><span class="hljs-built_in">module</span>.exports.up = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(N, callback)</span> </span>{
+  my_model = <span class="hljs-keyword">new</span> N.models.my_model(<span class="hljs-comment">/* data */</span>);
+
+  my_model.save(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(err)</span> </span>{
+    callback(err);
+  });
+}
+</code></pre>
+<h2 id="seeds">Seeds</h2>
+<h3 id="usage-cli-">Usage (CLI)</h3>
+<pre class="highlight"><code class="hljs bash">$ ./nodeca.js seed             <span class="hljs-comment"># list available seeds, with id</span>
+$ ./nodeca.js seed -n XXX      <span class="hljs-comment"># apply seed by id</span>
+$ ./nodeca.js seed -h          <span class="hljs-comment"># show help about other options</span>
+</code></pre>
+<h3 id="api">API</h3>
+<p>Seed API is similar to migrations, but more simple. All seeds are placed in
+<code>./db/seeds</code> folder, one seed in each *.js file. Each file exports async
+function, that applies seed.</p>
+<p><strong>NOTE</strong>. Loading seeds is limited to development/test environment. If you really
+need to run seed on production/staging, you must use option -f (--force)</p>
+<h2 id="data-snapshots">Data snapshots</h2>
+<p>There are couple of development scripts, to quickly switch between data states,
+when you actively change DB.</p>
+<pre class="highlight"><code class="hljs bash">$ ./bin/db-dump &lt;snapshot-id&gt;    <span class="hljs-comment"># make snapshot with given id into `./tmp`</span>
+</code></pre>
+<p>Note, that dump can contain multiple files (MongoDB, Redis).</p>
+<pre class="highlight"><code class="hljs bash">$ ./bin/db-restore &lt;snapshot-id&gt; <span class="hljs-comment"># restores data from snapshot with given id.</span>
+</code></pre>
+<p>(!) scripts force use development environment, to exclude possibility of data
+corruption</p>
+
+    <script defer="defer"  src="./vendor/jquery.js"></script><script defer="defer"  src="./scripts/script.js"></script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<h2 id="images-binaries-avatars">Images/Binaries &amp; avatars</h2>
+<p>Design goals:</p>
+<ul>
+<li>Simple (for small sites/volumes)</li>
+<li>Extendable (? switch backend)</li>
+<li>Keep public URLs after extention</li>
+<li>Permissions check (if needed, TBD)</li>
+</ul>
+<p>General comments:</p>
+<ol>
+<li>We use nginx to resize AND cache previews:
+<a href="http://nginx.org/en/docs/http/ngx_http_image_filter_module.html">ngx_http_image_filter_module</a> and
+<a href="http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_store">ngx_http_proxy_module</a>.</li>
+<li>Make all pics public, where possible, to avoid permissions check.</li>
+</ol>
+<h2 id="buckets-files-location-simple-small-">Buckets &amp; files location (simple/small)</h2>
+<p>(?) Each image (or file) has 12-bytes id (bucket).</p>
+<p>In simple/small config we use plain file system to store images, and db for
+meta info. 2 locations are possible: public and secure. If file is available
+on public location, permissions check is skipped. </p>
+<p>Images have auto-generated previews.</p>
+<h3 id="size-names">Size names</h3>
+<ul>
+<li>xs - 100x100</li>
+<li>s - 130x130</li>
+<li>m - 200x200</li>
+<li>l -300x300</li>
+<li>xl - 500x500</li>
+<li>xxl - 800x800</li>
+<li>xxxl - 1024x1024</li>
+<li>w - original</li>
+</ul>
+<h3 id="locations">Locations</h3>
+<p>FS:</p>
+<pre class="highlight"><code class="hljs django"><span class="xml">/<span class="hljs-tag">&lt;<span class="hljs-title">storage</span>&gt;</span>/
+  ├─ /secure/<span class="hljs-tag">&lt;<span class="hljs-title">b1b2</span>&gt;</span>/<span class="hljs-tag">&lt;<span class="hljs-title">b3b4</span>&gt;</span>/<span class="hljs-tag">&lt;<span class="hljs-title">bucket</span>&gt;</span>.(jpg|jpeg|tiff|png|gif|zip)
+  ├─ /sthumb/<span class="hljs-tag">&lt;<span class="hljs-title">b1b2</span>&gt;</span>/<span class="hljs-tag">&lt;<span class="hljs-title">b3b4</span>&gt;</span>/<span class="hljs-tag">&lt;<span class="hljs-title">bucket</span>&gt;</span>(_<span class="hljs-tag">&lt;<span class="hljs-title">size</span>&gt;</span>).jpg
+  ├─ /public/<span class="hljs-tag">&lt;<span class="hljs-title">b1b2</span>&gt;</span>/<span class="hljs-tag">&lt;<span class="hljs-title">b3b4</span>&gt;</span>/@<span class="hljs-tag">&lt;<span class="hljs-title">bucket</span>&gt;</span>.(jpg|jpeg|tiff|png|gif|zip) <span class="hljs-tag">&lt;<span class="hljs-title">-</span> <span class="hljs-attribute">symlink</span>
+  └─ /<span class="hljs-attribute">pthumb</span>/&lt;<span class="hljs-attribute">b1b2</span>&gt;</span>/<span class="hljs-tag">&lt;<span class="hljs-title">b3b4</span>&gt;</span>/@<span class="hljs-tag">&lt;<span class="hljs-title">bucket</span>&gt;</span>(_<span class="hljs-tag">&lt;<span class="hljs-title">size</span>&gt;</span>).jpg                <span class="hljs-tag">&lt;<span class="hljs-title">-</span> <span class="hljs-attribute">symlink</span>
+</span></span></code></pre><p>Public locations are symlinks. That allows easy permissions switch, without
+touching master file.</p>
+<p>Web (default):</p>
+<pre class="highlight"><code class="hljs livecodeserver">/<span class="hljs-built_in">files</span>
+</code></pre><h3 id="access-algorythm">Access algorythm</h3>
+<ol>
+<li>Search file in <code>public</code> location (original or auto-generated preview).</li>
+<li>If not exists -&gt; rewrite to <code>secure</code> location.</li>
+<li>If exists -&gt; rewrite to permission check. Else 404.</li>
+<li>If permissions ok -&gt; X-Accel-Redirect, else 403</li>
+</ol>
+<p>!!! If preview not exists, we have to check too many extensions, when resizing
+via nginx (bucket doesn&#39;t have original ext). Possible solution:</p>
+<ul>
+<li>keep original file without extention, return via script + X-Accel-Redirect
+with content-disposition.</li>
+<li>make .jpg symlink for non-jpeg images.</li>
+</ul>
+<p>First method seems more universal, with acceptable speed level. It allows to
+build web links without additional db request and return original file names
+(do we really need it?).</p>
+<p>Futher improvments:</p>
+<ul>
+<li>Bad requests cause double fs hit. Is it a problem?</li>
+<li>Permissions cache?</li>
+<li>Fast &quot;not for guests&quot; mode (check if session exists)</li>
+</ul>
+<h2 id="avatars">Avatars</h2>
+<p>Avatars are usual binary images, but with different store &amp; mount point
+location. That allows to use another image sizes and different cache policy</p>
+<h3 id="size-names">Size names</h3>
+<ul>
+<li>xs - 30x30</li>
+<li>s - 50x50</li>
+<li>m - 70x70</li>
+<li>l - 100x100</li>
+<li>xl - 150x150</li>
+<li>xxl - 200x200</li>
+<li>w - original</li>
+</ul>
+<h3 id="locations">Locations</h3>
+<p>FS:</p>
+<p>TBD. Check, if we can reuse images store.</p>
+<p>Web (default):</p>
+<pre class="highlight"><code class="hljs undefined">/avatars
+</code></pre><h2 id="permissions">Permissions</h2>
+<p>Not shure, we ever need it. Take care of this cases:</p>
+<ol>
+<li>&quot;Not for guests&quot;</li>
+<li>Only for users, how can read this forum/group</li>
+<li>Private albums (do we really need those?)</li>
+<li>What to do, if item has several restrictions?</li>
+<li>How to keep interface simple?</li>
+</ol>

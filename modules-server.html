@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Modules - Server | Nodeca</title>
+  <meta charset="utf-8">
+  <meta name="generator" content="DocPad v6.78.4" />
+  <link  rel="stylesheet" href="./styles/style.css" />
+</head>
+<body>
+  <ul class='sidebar'>
+    
+      <li class="inactive">
+        <a href="./app-files.html">App Files &amp; Dirs</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./app-bundler.html">Bundler</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./configs.html">Config files</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cli-tools.html">CLI (console tools)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./database.html">Database</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-structures.html">N.*</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-wire.html">N.wire (message bus)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-live.html">N.live (realtime)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules.html">Modules &amp; helpers</a>
+      </li>
+    
+      <li class="active">
+        <a href="./modules-server.html">Modules - Server</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-client.html">Modules - Client</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./requests.html">HTTP/RPC requests</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./env.html">env (in requests)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./router.html">Router</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cookies.html">Cookies</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./models.html">Models</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./settings.html">Settings</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./menus.html">Menus</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./debugging.html">Debug</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./notifications.html">Notifications</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./testing.html">Testing</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./i18n.html">i18n</a>
+      </li>
+    
+  </ul>
+  <div class="content">
+    <div class="page-header">
+      <h1>Modules - Server</h1>
+    </div>
+    <p>Files <code>./server/**/*.js</code> are loaded &amp; initialized as server methods.</p>
+<pre class="highlight"><code class="hljs no-highlight">├─ server/
+│   └─ admin/
+│       ├─ dashboard.js
+│       └─ users.js
+</code></pre>
+<p>Module shoud export function, that add all nesessary validators &amp; listeners
+to provided channel. &#39;Channel name&#39; is calculated from FS path + <code>server:</code> prefix.</p>
+<p>Example for dummy dashboard.js:</p>
+<pre class="highlight"><code class="hljs javascript"><span class="hljs-built_in">module</span>.exports = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(N, apiPath)</span> </span>{
+
+  <span class="hljs-comment">// N - application sandbox</span>
+  <span class="hljs-comment">// apipath - server:admin.dashboard</span>
+
+  <span class="hljs-comment">// Dummy validator</span>
+  N.validate(apiPath, {});
+
+  <span class="hljs-comment">// we can skip callback for synk handler</span>
+  N.wire.on(apiPath, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(env, callback)</span> </span>{
+    env.response.data.now = (<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>).toString();
+    callback();
+  });
+};
+</code></pre>
+<p>Server methods are designed to be lite, with minimal hooks count. That will
+allow to make nested calls for comples page - when page conteins multiple
+widgets. Nested calls should not create session and other things every time.</p>
+<h2 id="hooks">Hooks</h2>
+<p>Data processing can be extended by adding channel listeners. They sequentially
+modify <code>env</code> object, according to priorities. See
+<a href="https://github.com/nodeca/nodeca.core/tree/master/lib/hooks/requests">source code</a>
+of existing extentions.</p>
+<h2 id="validating-request-params">Validating request params</h2>
+<p>All server methods, must define params validation schema. If validation
+rule missed - all calls will be rejected with errors.
+See <a href="http://json-schema.org/">JSON Schema</a> specifications. We support
+basic subset, described in <a href="https://github.com/flatiron/revalidator">revalidator</a>
+docs.</p>
+<p>Example:</p>
+<pre class="highlight"><code class="hljs javascript">N.validate(apiPath, {
+  <span class="hljs-comment">// forum id</span>
+  id: {
+    type: <span class="hljs-string">"integer"</span>,
+    minimum: <span class="hljs-number">1</span>,
+    required: <span class="hljs-literal">true</span>
+  },
+  page: {
+    type: <span class="hljs-string">"integer"</span>,
+    minimum: <span class="hljs-number">1</span>,
+    <span class="hljs-keyword">default</span>: <span class="hljs-number">1</span>
+  }
+});
+</code></pre>
+<p>Empty schema (no params):</p>
+<pre class="highlight"><code class="hljs javascript">N.validate(apiPath, {});
+</code></pre>
+<p><strong>NOTE 1</strong>. We force <code>additionalProperties: false</code> by default, to make shure,
+that missed params will not be passed without check.</p>
+<p><strong>NOTE 2</strong>. If you ever decide to pass nested objects, remember to define
+<code>additionalProperties: false</code> on each schema sublevel.</p>
+
+    <script defer="defer"  src="./vendor/jquery.js"></script><script defer="defer"  src="./scripts/script.js"></script>
+  </div>
+</body>
+</html>

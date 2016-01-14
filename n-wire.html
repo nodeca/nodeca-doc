@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>N.wire (message bus) | Nodeca</title>
+  <meta charset="utf-8">
+  <meta name="generator" content="DocPad v6.78.4" />
+  <link  rel="stylesheet" href="./styles/style.css" />
+</head>
+<body>
+  <ul class='sidebar'>
+    
+      <li class="inactive">
+        <a href="./app-files.html">App Files &amp; Dirs</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./app-bundler.html">Bundler</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./configs.html">Config files</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cli-tools.html">CLI (console tools)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./database.html">Database</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-structures.html">N.*</a>
+      </li>
+    
+      <li class="active">
+        <a href="./n-wire.html">N.wire (message bus)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-live.html">N.live (realtime)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules.html">Modules &amp; helpers</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-server.html">Modules - Server</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-client.html">Modules - Client</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./requests.html">HTTP/RPC requests</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./env.html">env (in requests)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./router.html">Router</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cookies.html">Cookies</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./models.html">Models</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./settings.html">Settings</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./menus.html">Menus</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./debugging.html">Debug</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./notifications.html">Notifications</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./testing.html">Testing</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./i18n.html">i18n</a>
+      </li>
+    
+  </ul>
+  <div class="content">
+    <div class="page-header">
+      <h1>N.wire (message bus)</h1>
+    </div>
+    <p><a href="https://github.com/nodeca/nodeca.core/blob/master/lib/system/wire.js">N.wire</a>,
+combines features of &#39;mediator&#39; AND &#39;chain of responsibility&#39;. You can
+consider it as pool of chains, or as mediator with weighted subscribers.</p>
+<p><strong>NOTE</strong>. By convention, handler with zero priority as &quot;main&quot;. Others
+are considered as before/after filters (can be extended via hooks). </p>
+<p>Known channels:</p>
+<pre class="highlight"><code class="hljs no-highlight">init:models          - load models. (!) db connections established on &#39;before&#39; filters
+init:stores          - load stores (probably, have to move on &#39;after&#39; filter)
+init:migrations      - check migrations
+init:bundle          - load server methods, i18n, client, ... and create bundles
+init:server          - start server listener
+server:**            - http/rpc responders &amp; hooks attached there
+server:core.static   - micro static server for robots.txt and others
+server:core.assets   - assets server
+</code></pre>
+<p>Typical hooks list:</p>
+<pre class="highlight"><code class="hljs no-highlight">[-99] puncher_start
+[-85] cookies_start
+[-80] session_start
+[-75] csrf_protect
+[-65] locale_inject
+[-10] load_current_user
+[0] &lt;anonymous&gt;
+[10] join_users
+[50] inject_menu
+[50] init_recaptcha
+[50] inject_assets_info
+[85] renderer
+[90] cookies_end    !permanent
+[90] session_end    !permanent
+[99] puncher_end
+</code></pre>
+<h2 id="dev-tools-server-">Dev tools (server)</h2>
+<p>CLI allows to dump existing chains:</p>
+<pre class="highlight"><code class="hljs bash">$ ./nodeca.js filters                   <span class="hljs-comment"># show all chains &amp; all handlers</span>
+$ ./nodeca.js filters -h                <span class="hljs-comment"># show help</span>
+$ ./nodeca.js filters <span class="hljs-operator">-s</span>                <span class="hljs-comment"># show all chains, without details</span>
+$ ./nodeca.js filters -m server:core.   <span class="hljs-comment"># show server:core.* chains &amp; handlers</span>
+</code></pre>
+<h2 id="wire-api">Wire API</h2>
+<p>See <a href="https://github.com/nodeca/nodeca.core/blob/master/lib/system/wire.js">Wire source code</a>
+for details.</p>
+<h3 id="wire-emit-channel-params-callback-">Wire.emit(channel, params, [callback])</h3>
+<p>Sends message with <code>params</code> into the <code>channel</code>. Once all sync and ascync
+handlers finished, optional <code>callback(err)</code> (if specified) fired.</p>
+<p>On multiple channels (when channel is Array of strings), all chanins are
+executed in serial. See examples in <code>./cli</code> sources.</p>
+<p>Chain can be terminated, if handler returns error (in callback or in result).
+But some handlers can have flags &#39;non terminateable&#39; - that can be useful
+to finalize session deals.</p>
+<h3 id="wire-on-channel-options-handler-">Wire.on(channel, [options], handler)</h3>
+<p>Registers <code>handler</code> (sync or async) to be executed upon messages in the
+<code>channel</code>. Glob patterns are allowed (<em>* and </em>)</p>
+<p>Options:</p>
+<ul>
+<li><code>priority</code> (Default: 0)</li>
+<li><code>ensure</code> (Default: false) -  if <code>true</code>, will run handler even
+ if one of previous fired error.</li>
+</ul>
+<h3 id="wire-before-wire-after">Wire.before, Wire.after</h3>
+<p>Shugar of <code>Wire.on</code>. But with default priority -10 and +10.</p>
+<h3 id="wire-once">Wire.once</h3>
+<p>The same as <code>Wire.on</code>, but subscriber automatically removed after fire.</p>
+<h3 id="wire-off-channel-handler-">Wire.off(channel[, handler])</h3>
+<p>Unsubscribe handler (or all) from channel</p>
+<h3 id="wire-skip-channel-skiplist-">Wire.skip(channel, skipList)</h3>
+<p>Disable named handler(s) on specified channel. For example, you can wish to
+disable session &amp; cookies handlers on static server responder.</p>
+<h3 id="wire-has-channel-">Wire.has(channel)</h3>
+<p>Returns if <code>channel</code> has at least one subscriber with zero priority (main
+handler, by convention). Used by router, to check if server method exits.
+Filters can be added by externals applications, but we should not use chain
+without &quot;main&quot; method.</p>
+<h3 id="wire-stat-">Wire.stat()</h3>
+<p>Bus statistics (channels, handlers, counters).</p>
+
+    <script defer="defer"  src="./vendor/jquery.js"></script><script defer="defer"  src="./scripts/script.js"></script>
+  </div>
+</body>
+</html>

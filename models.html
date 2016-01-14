@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Models | Nodeca</title>
+  <meta charset="utf-8">
+  <meta name="generator" content="DocPad v6.78.4" />
+  <link  rel="stylesheet" href="./styles/style.css" />
+</head>
+<body>
+  <ul class='sidebar'>
+    
+      <li class="inactive">
+        <a href="./app-files.html">App Files &amp; Dirs</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./app-bundler.html">Bundler</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./configs.html">Config files</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cli-tools.html">CLI (console tools)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./database.html">Database</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-structures.html">N.*</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-wire.html">N.wire (message bus)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-live.html">N.live (realtime)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules.html">Modules &amp; helpers</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-server.html">Modules - Server</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-client.html">Modules - Client</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./requests.html">HTTP/RPC requests</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./env.html">env (in requests)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./router.html">Router</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cookies.html">Cookies</a>
+      </li>
+    
+      <li class="active">
+        <a href="./models.html">Models</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./settings.html">Settings</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./menus.html">Menus</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./debugging.html">Debug</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./notifications.html">Notifications</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./testing.html">Testing</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./i18n.html">i18n</a>
+      </li>
+    
+  </ul>
+  <div class="content">
+    <div class="page-header">
+      <h1>Models</h1>
+    </div>
+    <p>Models are stored under <code>./models</code> directory and become available as subtree
+under <code>N.models</code>:</p>
+<pre class="highlight"><code class="hljs r">├─ models/
+│   ├─ foo/
+│   │   ├─ Bar.js   <span class="hljs-comment"># N.models.foo.Bar</span>
+│   │   └─ <span class="hljs-keyword">...</span>
+│   └─ Aha.js       <span class="hljs-comment"># N.models.Aha</span>
+</code></pre><p>Each model exports:</p>
+<ol>
+<li>Model schema (or several schemas)</li>
+<li><strong>init</strong>() consctuctor, that build model.</li>
+</ol>
+<p>That allows to modify schemas via hooks.</p>
+<pre class="highlight"><code class="hljs javascript"><span class="hljs-comment">// file  : model/blog/Entry.js</span>
+<span class="hljs-comment">// api   : N.models.blog.Entry</span>
+
+<span class="hljs-keyword">var</span> mongoose = N.runtime.mongoose;
+
+<span class="hljs-keyword">var</span> Comments = <span class="hljs-built_in">module</span>.exports.Comments = <span class="hljs-keyword">new</span> mongoose.Schema({
+    title     : <span class="hljs-built_in">String</span>
+  , body      : <span class="hljs-built_in">String</span>
+  , date      : <span class="hljs-built_in">Date</span>
+});
+
+<span class="hljs-keyword">var</span> Entry = <span class="hljs-built_in">module</span>.exports.BlogPost = <span class="hljs-keyword">new</span> mongoose.Schema({
+    author    : ObjectId
+  , title     : <span class="hljs-built_in">String</span>
+  , body      : <span class="hljs-built_in">String</span>
+  , date      : <span class="hljs-built_in">Date</span>
+  , comments  : [Comments]
+  , meta      : {
+        votes : <span class="hljs-built_in">Number</span>
+      , favs  : <span class="hljs-built_in">Number</span>
+    }
+});
+
+<span class="hljs-built_in">module</span>.exports.__init__ = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">return</span> mongoose.model(<span class="hljs-string">'blog.Entry'</span>, Entry);
+};
+</code></pre>
+
+    <script defer="defer"  src="./vendor/jquery.js"></script><script defer="defer"  src="./scripts/script.js"></script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Modules - Client | Nodeca</title>
+  <meta charset="utf-8">
+  <meta name="generator" content="DocPad v6.78.4" />
+  <link  rel="stylesheet" href="./styles/style.css" />
+</head>
+<body>
+  <ul class='sidebar'>
+    
+      <li class="inactive">
+        <a href="./app-files.html">App Files &amp; Dirs</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./app-bundler.html">Bundler</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./configs.html">Config files</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cli-tools.html">CLI (console tools)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./database.html">Database</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-structures.html">N.*</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-wire.html">N.wire (message bus)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-live.html">N.live (realtime)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules.html">Modules &amp; helpers</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-server.html">Modules - Server</a>
+      </li>
+    
+      <li class="active">
+        <a href="./modules-client.html">Modules - Client</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./requests.html">HTTP/RPC requests</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./env.html">env (in requests)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./router.html">Router</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cookies.html">Cookies</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./models.html">Models</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./settings.html">Settings</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./menus.html">Menus</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./debugging.html">Debug</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./notifications.html">Notifications</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./testing.html">Testing</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./i18n.html">i18n</a>
+      </li>
+    
+  </ul>
+  <div class="content">
+    <div class="page-header">
+      <h1>Modules - Client</h1>
+    </div>
+    <p>Client modules are independent closures, that can include CommonJS.
+They are automatically collected, browserified, joined together, and minified
+by the bundler.</p>
+<p>All &quot;magic&quot; is in <code>require</code> directive. There are several types of
+requireable files:</p>
+<ul>
+<li>&quot;vendor&quot; libraries - embedded with global path (or shortname). Should be
+announced in bundler config. Used for global libraries, like &quot;lodash&quot;.</li>
+<li>&quot;local&quot; libraries - works as in node.js, embedded once per package.</li>
+</ul>
+<p>Also there are some extra stuff available within Nodeca&#39;s client modules over
+CommonJS specification:</p>
+<ul>
+<li><strong>module.apiPath</strong> - contains API path of the module. (e.g. <code>forum.section</code>)</li>
+<li><strong>N</strong> - local reference to N object.</li>
+<li><strong>t</strong> - local wrapper over <code>N.runtime.t</code> allows to use translation paths
+relative to the module&#39;s API path.</li>
+</ul>
+<h2 id="wire-listeners">Wire listeners</h2>
+<p>There are some common events, that can be emitted from any modules:</p>
+<ul>
+<li><strong>navigate.to</strong> - go to another page</li>
+<li>__navigate.exit:<api_path> - fired, prior to leave page with certain api path. Useful
+for resourses cleanup.</li>
+<li><strong>navigate.exit</strong> - the same as above, but global (fired every time we leave any page).
+Can be used to control global page objects</li>
+<li><strong>navigate.done:<api_path></strong> - fired page with certain api path, after data loaded
+and rendering compleete. Useful to init internal structures, that depends on DOM and
+another scripts. Can be used instead of $(function(){...}), but for one page</li>
+<li><strong>navigate.done</strong> - the same as above, but global (fired every time for all pages).
+Can be used instead of $(function(){...})</li>
+<li><strong>notify</strong> - show popup message in top right corner</li>
+</ul>
+
+    <script defer="defer"  src="./vendor/jquery.js"></script><script defer="defer"  src="./scripts/script.js"></script>
+  </div>
+</body>
+</html>

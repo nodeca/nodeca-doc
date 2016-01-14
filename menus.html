@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Menus | Nodeca</title>
+  <meta charset="utf-8">
+  <meta name="generator" content="DocPad v6.78.4" />
+  <link  rel="stylesheet" href="./styles/style.css" />
+</head>
+<body>
+  <ul class='sidebar'>
+    
+      <li class="inactive">
+        <a href="./app-files.html">App Files &amp; Dirs</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./app-bundler.html">Bundler</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./configs.html">Config files</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cli-tools.html">CLI (console tools)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./database.html">Database</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-structures.html">N.*</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-wire.html">N.wire (message bus)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-live.html">N.live (realtime)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules.html">Modules &amp; helpers</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-server.html">Modules - Server</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-client.html">Modules - Client</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./requests.html">HTTP/RPC requests</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./env.html">env (in requests)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./router.html">Router</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cookies.html">Cookies</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./models.html">Models</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./settings.html">Settings</a>
+      </li>
+    
+      <li class="active">
+        <a href="./menus.html">Menus</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./debugging.html">Debug</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./notifications.html">Notifications</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./testing.html">Testing</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./i18n.html">i18n</a>
+      </li>
+    
+  </ul>
+  <div class="content">
+    <div class="page-header">
+      <h1>Menus</h1>
+    </div>
+    <p>Menus are special structures - nested trees with permission attributes. Used to
+build navigation interface. You can make as many menus as you wish. As all config
+data, menu items can be merged from multiple applications</p>
+<p><code>N.runtime.router</code> is used to build links for menu items.</p>
+<h2 id="example">Example</h2>
+<pre class="highlight"><code class="hljs no-highlight">menus:
+
+  common:                         # namespace (package)
+
+    topnav:                       # menu id
+
+      profile:                    # menu item
+
+        to: user.profile          # server method (optional)
+
+        priority: 100             # item priority (optional. default: 100)
+
+        check_permissions: true   # check action permissions to show/hide item
+                                  # (optional. default: false.)
+
+      forum:
+        to: forum.topics.list
+
+      blogs:
+        to: blog.posts.latest_list
+
+      faq:
+        to: faq.latest
+
+      sales:
+        to: sales.dashboard
+
+      groups:
+        to: groups.dashboard
+
+      maps:
+        to: maps.dashboard
+
+      translations:
+        to: maps.dshboard
+
+  admin:
+    system-sidebar:
+      settings:
+        submenu:
+          system:
+            to: admin.system.dashboard
+            submenu:
+              performance:
+                to admin.system.performance
+              license:
+                to: admin.system.license
+
+  user:
+    profile-sections:
+      blog:
+        priority: 5
+        to: blog.posts
+
+      friends:
+        to: user.friends
+
+      photos:
+        to: gallery.albums
+
+      messages:
+        to: user.messages
+
+      events:
+        to: user.events
+</code></pre>
+<h2 id="menu-i18n-example">Menu i18n example</h2>
+<pre class="highlight"><code class="hljs less"><span class="hljs-attribute">i18n</span>:
+  <span class="hljs-attribute">en-us</span>:
+    <span class="hljs-attribute">common</span>:
+      <span class="hljs-attribute">menus</span>:
+        <span class="hljs-attribute">topnav</span>:
+          <span class="hljs-attribute">profile</span>: Profile
+          <span class="hljs-attribute">forum</span>: Forum
+          <span class="hljs-attribute">blogs</span>: Blogs
+          <span class="hljs-attribute">faq</span>: Questions
+          <span class="hljs-attribute">sales</span>: Sales
+          <span class="hljs-attribute">groups</span>: Groups
+          <span class="hljs-attribute">maps</span>: Maps
+          <span class="hljs-attribute">translations</span>: Translations
+    <span class="hljs-attribute">admin</span>:
+      <span class="hljs-attribute">menus</span>:
+        <span class="hljs-attribute">system-sidebar</span>:
+          <span class="hljs-attribute">settings</span>: Tools &amp; Settings
+          settings.<span class="hljs-attribute">system</span>: System Settings
+          settings.system.<span class="hljs-attribute">performance</span>: Performance Mode
+          settings.system.<span class="hljs-attribute">license</span>: License Key
+</code></pre><h2 id="rendering-menus">Rendering Menus</h2>
+<p>TBD. Should be redesigned.</p>
+<p>Currently menu is injected by hook. Structure example:</p>
+<pre class="highlight"><code class="hljs javascript">{
+  common: {
+    topnav: [
+      {
+        title: <span class="hljs-string">"Profile"</span>,
+        link: <span class="hljs-string">"http://nodeca.org/user/profile"</span>
+      },
+      <span class="hljs-comment">// ...</span>
+    ]
+  },
+
+  admin: {
+    <span class="hljs-string">"system-sidebar"</span>: [
+      {
+        title: <span class="hljs-string">"Tools &amp; Settings"</span>,
+        childs: [
+          {
+            title: <span class="hljs-string">"System Settings"</span>,
+            link: <span class="hljs-string">"http://nodeca.org/admin/settings"</span>,
+            childs: [
+              {
+                title: <span class="hljs-string">"Performance Mode"</span>,
+                link: <span class="hljs-string">"http://nodeca.org/admin/performance"</span>
+              },
+              <span class="hljs-comment">// ...</span>
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre>
+<p>Before rendring views (on server/client), we are using this shared method
+to build all menu maps and expose it:</p>
+<ul>
+<li>as <code>env.response.data.menus</code> on server</li>
+<li>as <code>locals.menus</code> on client</li>
+</ul>
+
+    <script defer="defer"  src="./vendor/jquery.js"></script><script defer="defer"  src="./scripts/script.js"></script>
+  </div>
+</body>
+</html>

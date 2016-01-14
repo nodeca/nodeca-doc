@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Config files | Nodeca</title>
+  <meta charset="utf-8">
+  <meta name="generator" content="DocPad v6.78.4" />
+  <link  rel="stylesheet" href="./styles/style.css" />
+</head>
+<body>
+  <ul class='sidebar'>
+    
+      <li class="inactive">
+        <a href="./app-files.html">App Files &amp; Dirs</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./app-bundler.html">Bundler</a>
+      </li>
+    
+      <li class="active">
+        <a href="./configs.html">Config files</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cli-tools.html">CLI (console tools)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./database.html">Database</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-structures.html">N.*</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-wire.html">N.wire (message bus)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-live.html">N.live (realtime)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules.html">Modules &amp; helpers</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-server.html">Modules - Server</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-client.html">Modules - Client</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./requests.html">HTTP/RPC requests</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./env.html">env (in requests)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./router.html">Router</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cookies.html">Cookies</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./models.html">Models</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./settings.html">Settings</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./menus.html">Menus</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./debugging.html">Debug</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./notifications.html">Notifications</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./testing.html">Testing</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./i18n.html">i18n</a>
+      </li>
+    
+  </ul>
+  <div class="content">
+    <div class="page-header">
+      <h1>Config files</h1>
+    </div>
+    <p>Configs are placed in <code>./config/**/*.yml</code> files in every app. Final result is
+nested tree, merged from that files. You can split data as you wish, override
+defaults, and have custom values for each environment.</p>
+<h2 id="config-loading-algorythm">Config loading algorythm</h2>
+<ol>
+<li>Load root app config</li>
+<li>Deep merge all data from child apps<ul>
+<li>If object has property <code>~override: true</code>, it will replace any existing
+value. Use it, if you want to erase branch, instead if deep merge.</li>
+</ul>
+</li>
+<li>Search branches <code>^env_name</code> for current environment, and use it to override
+values. Recommended env names:<ul>
+<li>production</li>
+<li>development</li>
+<li>test</li>
+<li>staging</li>
+</ul>
+</li>
+</ol>
+<p>See original configs for details:
+<a href="https://github.com/nodeca/nodeca.core/tree/master/config">nodeca.core</a> defaults,
+and <a href="https://github.com/nodeca/nodeca/tree/master/config">nodeca main app</a>
+settings.</p>
+<h2 id="-onfig-structure">Сonfig structure</h2>
+<p>Not exact, only for overview. See real configs in <code>nodeca</code> &amp; <code>nodeca.core</code></p>
+<pre class="highlight"><code class="hljs no-highlight">configured                  # = true, if not exists -&gt; config missed
+
+applications                # array of active aplication (npm packages)
+
+locales                     # existing locales config
+  default
+  enabled
+
+logger                      # logger config
+
+bind                        # server listen &amp; router bindings
+router                      # router rules
+  map
+  direct_invocators
+
+database                    # db connections params
+  mongo
+    host
+    port
+    database
+    user
+    password
+  redis
+    host
+    port
+    index
+
+options                     # minor variables, to keep root clear
+  recaptcha
+    private_key
+    public_key
+
+setting_schemas             # Setting configs &amp; defaults
+setting_groups              # Settings tabs/groups definitions
+
+menus                       # menus.&lt;namespace&gt;.&lt;menu_id&gt;.items.configs
+
+i18n                        # i18n.&lt;locale&gt;.&lt;namespase&gt;.my.phrase.translation
+</code></pre>
+
+    <script defer="defer"  src="./vendor/jquery.js"></script><script defer="defer"  src="./scripts/script.js"></script>
+  </div>
+</body>
+</html>

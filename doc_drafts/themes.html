@@ -1,0 +1,71 @@
+<p>Themes is additional layer over templates (views) and assets, suited to
+conveniently operate with website look. Here are most often use cases:</p>
+<ul>
+<li>You make different skins for desktop, mobile and tablet devices</li>
+<li>You add 3rd-party component, that extends pages with new elements</li>
+<li>You like to customize default look (e.g. recolor with CSS, change logo)</li>
+</ul>
+<p>(!) Themes layer does NOT depend on template engines. It&#39;s used for easy
+morphing of existing theme elements:</p>
+<ul>
+<li>templates override / add / patch</li>
+<li>binaries add / override (useful for images, smiles)</li>
+</ul>
+<h1 id="theme-files">Theme files</h1>
+<p>In nodeca, theme files are placed under 2 paths: templates &amp; assets:</p>
+<pre class="highlight"><code class="hljs gherkin">.
+├─ assets/
+│   └─ <span class="hljs-variable">&lt;theme-id&gt;</span>/<span class="hljs-keyword">*</span>.<span class="hljs-keyword">*</span> 
+└─ views/
+    └─ <span class="hljs-variable">&lt;theme-id&gt;</span>/<span class="hljs-keyword">*</span>.<span class="hljs-keyword">*</span>
+</code></pre><ol>
+<li>Some directories can be missed. For example, in inherited themes.</li>
+<li>In nodeca, theme files are merged from all applications to single dir,
+then patch rules applyed.</li>
+<li>We use <code>localised templates</code> concept - that means, each theme is built
+separately for each language. That allows to reduce translation calls</li>
+</ol>
+<h1 id="theme-config">Theme config</h1>
+<p>Theme can be extended and inherited. In nodeca, <code>extending</code> happens
+automatically on applications sources merge. Inheritance should be defined
+in config.</p>
+<pre class="highlight"><code class="hljs applescript"><span class="hljs-comment">---</span>
+themes:
+  <span class="hljs-comment"># You can specify either whitelist:</span>
+  <span class="hljs-comment">#</span>
+  <span class="hljs-comment"># enabled:</span>
+  <span class="hljs-comment">#   - deep-purple</span>
+  <span class="hljs-comment">#   - pink-floyd</span>
+  <span class="hljs-comment">#</span>
+  <span class="hljs-comment"># or blacklist of enabled themes:</span>
+  <span class="hljs-comment">#</span>
+  <span class="hljs-comment"># disabled:</span>
+  <span class="hljs-comment">#   - yellow-submarine</span>
+  <span class="hljs-comment">#</span>
+  <span class="hljs-comment"># All available themes are enabled by default, when no whitelist or blacklist</span>
+  <span class="hljs-comment"># specified. When both white and black lists are provided, whitelist is used.</span>
+
+  schemas:
+
+    desktop:
+      <span class="hljs-property">name</span>: Default Desktop Theme
+
+    <span class="hljs-comment"># theme id</span>
+    mobile:
+      <span class="hljs-comment"># full name</span>
+      <span class="hljs-property">name</span>: Default Mobile Theme
+      <span class="hljs-comment"># parent id</span>
+      inherits: desktop
+</code></pre><h1 id="patches-overrides">Patches &amp; overrides</h1>
+<p>Override happens, when file with the same name &amp; the same subfolder, as in
+parent, found. Subfolders are relative to base prefix (see directives
+<code>templates</code>, <code>static</code> in config).</p>
+<p>If you wish to apply patch - make file with appropriate name &amp; location, but add
+<code>.patch</code> extentions. For example <code>./views/theme-mobile/forum/index.jade.patch</code>.
+If template needs sevaral patches, ordered by priorities, add weigth prior to
+extention, like <code>./views/theme-mobile/forum/index.jade.45.patch</code>. Default weight
+is 10.</p>
+<p>Note, that patch weights are global.</p>
+<p>Patches should be <code>unified diffs</code>, applyed with <code>patch</code> command. There only
+exclution is, when we need just add data to the start or to the end of template.
+Then create file with extention <code>.before</code> or <code>.after</code>.</p>

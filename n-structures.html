@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>N.* | Nodeca</title>
+  <meta charset="utf-8">
+  <meta name="generator" content="DocPad v6.78.4" />
+  <link  rel="stylesheet" href="./styles/style.css" />
+</head>
+<body>
+  <ul class='sidebar'>
+    
+      <li class="inactive">
+        <a href="./app-files.html">App Files &amp; Dirs</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./app-bundler.html">Bundler</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./configs.html">Config files</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cli-tools.html">CLI (console tools)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./database.html">Database</a>
+      </li>
+    
+      <li class="active">
+        <a href="./n-structures.html">N.*</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-wire.html">N.wire (message bus)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-live.html">N.live (realtime)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules.html">Modules &amp; helpers</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-server.html">Modules - Server</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-client.html">Modules - Client</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./requests.html">HTTP/RPC requests</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./env.html">env (in requests)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./router.html">Router</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cookies.html">Cookies</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./models.html">Models</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./settings.html">Settings</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./menus.html">Menus</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./debugging.html">Debug</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./notifications.html">Notifications</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./testing.html">Testing</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./i18n.html">i18n</a>
+      </li>
+    
+  </ul>
+  <div class="content">
+    <div class="page-header">
+      <h1>N.*</h1>
+    </div>
+    <p>Special sandbox object <code>N</code> keeps ALL info about application. Here is map of
+available properties. There can be difference on server and client.</p>
+<pre class="highlight"><code class="hljs puppet"><span class="hljs-constant">N</span>
+  wire                    <span class="hljs-comment"># Message bus</span>
+  logger                  <span class="hljs-comment"># logger instance</span>
+
+  version_hash            <span class="hljs-comment"># global assets hash, to force clients reload</span>
+  <span class="hljs-literal">environment</span>             <span class="hljs-comment"># runtime environment ???client only???</span>
+
+  i18n                    <span class="hljs-comment"># translator (BabelFish) instance</span>
+                          <span class="hljs-comment"># (client version is loaded with single locale only)</span>
+
+  <span class="hljs-keyword">router</span>                  <span class="hljs-comment"># router instance, filled with routes from config</span>
+  views                   <span class="hljs-comment"># compiled views</span>
+
+  <span class="hljs-comment"># client only</span>
+
+  io                      <span class="hljs-comment"># status codes</span>
+  io.rpc                  <span class="hljs-comment"># client only, server methods call</span>
+
+  runtime                 <span class="hljs-comment"># `dynamic` structures</span>
+
+    t()                 <span class="hljs-comment"># shortcuts, with current locale</span>
+    t.exists()          <span class="hljs-comment">#</span>
+
+    <span class="hljs-comment"># for additional client-specific properties see `env.runtime` content</span>
+
+  <span class="hljs-comment"># server only</span>
+
+  args                  <span class="hljs-comment"># CLI params</span>
+
+  mainApp                 <span class="hljs-comment"># root application</span>
+  apps                    <span class="hljs-comment"># array of loaded apps info { name, absolute_path }</span>
+
+  config                  <span class="hljs-comment"># parsed config file</span>
+
+  assets                  <span class="hljs-comment"># assets-related data</span>
+    files                 <span class="hljs-comment"># array of assets info (path, digest)</span>
+    distribution          <span class="hljs-comment"># assets info for loader</span>
+    asset_url(<span class="hljs-built_in">path</span>)       <span class="hljs-comment"># returns url for asset</span>
+    asset_body(<span class="hljs-built_in">path</span>)      <span class="hljs-comment"># returns compiled asset as a string</span>
+
+  validate                <span class="hljs-comment"># rpc/http params validator</span>
+
+  models                  <span class="hljs-comment"># server models (universal, implementation independent</span>
+  <span class="hljs-keyword">settings</span>                <span class="hljs-comment"># settings class, see ./lib/system/init/store.js</span>
+
+  redis
+  redback
+</code></pre>
+    <script defer="defer"  src="./vendor/jquery.js"></script><script defer="defer"  src="./scripts/script.js"></script>
+  </div>
+</body>
+</html>

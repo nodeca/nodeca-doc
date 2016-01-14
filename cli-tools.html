@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CLI (console tools) | Nodeca</title>
+  <meta charset="utf-8">
+  <meta name="generator" content="DocPad v6.78.4" />
+  <link  rel="stylesheet" href="./styles/style.css" />
+</head>
+<body>
+  <ul class='sidebar'>
+    
+      <li class="inactive">
+        <a href="./app-files.html">App Files &amp; Dirs</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./app-bundler.html">Bundler</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./configs.html">Config files</a>
+      </li>
+    
+      <li class="active">
+        <a href="./cli-tools.html">CLI (console tools)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./database.html">Database</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-structures.html">N.*</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-wire.html">N.wire (message bus)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-live.html">N.live (realtime)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules.html">Modules &amp; helpers</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-server.html">Modules - Server</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-client.html">Modules - Client</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./requests.html">HTTP/RPC requests</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./env.html">env (in requests)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./router.html">Router</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cookies.html">Cookies</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./models.html">Models</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./settings.html">Settings</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./menus.html">Menus</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./debugging.html">Debug</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./notifications.html">Notifications</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./testing.html">Testing</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./i18n.html">i18n</a>
+      </li>
+    
+  </ul>
+  <div class="content">
+    <div class="page-header">
+      <h1>CLI (console tools)</h1>
+    </div>
+    <h2 id="usage">Usage</h2>
+<p>General call format:</p>
+<pre class="highlight"><code class="hljs bash">$ ./nodeca.js &lt;command&gt; [options]
+</code></pre>
+<p>In real life:</p>
+<pre class="highlight"><code class="hljs bash">$ ./nodeca.js migrate --all
+$ ./nodeca.js -h
+$ ./nodeca.js seed -h
+$ ./nodeca.js server
+</code></pre>
+<h2 id="api">API</h2>
+<p>Commands are stored in <code>./cli/**/*.js</code> files. Each file exports config for
+single command. See description below.</p>
+<h3 id="commandname">commandName</h3>
+<p>Optional. Name of command, registered by this module. If empty or not exists,
+then file name will be used (without extention).</p>
+<h3 id="parserparameters">parserParameters</h3>
+<p>Object with parser parameters</p>
+<pre class="highlight"><code class="hljs javascript"><span class="hljs-built_in">module</span>.exports.parserParameters = {
+  version: nodeca.runtime.version,
+  addHelp:<span class="hljs-literal">true</span>,
+  help: <span class="hljs-string">'controls nodeca server'</span>,
+  description: <span class="hljs-string">'Controls nodeca server ...'</span>
+};
+</code></pre>
+<p><em>Note:</em> See also <a href="http://docs.python.org/dev/library/argparse.html#argumentparser-objects">ArgumentParser objects</a>
+and <a href="http://docs.python.org/dev/library/argparse.html#sub-commands">sub-commands</a>
+in original parser guide.</p>
+<h3 id="commandlinearguments-">commandLineArguments[]</h3>
+<p>List of arguments definitions.</p>
+<pre class="highlight"><code class="hljs javascript"><span class="hljs-built_in">module</span>.exports.commandLineArguments = [
+  { args: [<span class="hljs-string">'-p'</span>,<span class="hljs-string">'--port'</span>], options: { type: <span class="hljs-string">'int'</span>} },
+  { args: [<span class="hljs-string">'--host'</span>], options: {defaultValue: <span class="hljs-string">'localhost'</span>} }
+];
+</code></pre>
+<p><em>Note:</em> See also  <a href="http://docs.python.org/dev/library/argparse.html#the-add-argument-method">add_argument()</a>
+in parsed docs.</p>
+<h3 id="run-n-args-callback-">run(N, args, callback)</h3>
+<p>Emits neccessary init sequence, and executes command code.</p>
+<pre class="highlight"><code class="hljs javascript"><span class="hljs-built_in">module</span>.exports.run = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(N, args, callback)</span> </span>{
+  N.wire.emit([
+      <span class="hljs-string">'init:models'</span>,
+      <span class="hljs-string">'init:stores'</span>,
+      <span class="hljs-string">'init:migrations'</span>,
+      <span class="hljs-string">'init:bundle'</span>,
+      <span class="hljs-string">'init:server'</span>
+    ], N,
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(err)</span> </span>{
+
+      <span class="hljs-comment">/* Do things here */</span>
+
+      callback();
+    }
+  );
+};
+</code></pre>
+<p><code>args</code> - object with parsed arguments.</p>
+
+    <script defer="defer"  src="./vendor/jquery.js"></script><script defer="defer"  src="./scripts/script.js"></script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Router | Nodeca</title>
+  <meta charset="utf-8">
+  <meta name="generator" content="DocPad v6.78.4" />
+  <link  rel="stylesheet" href="./styles/style.css" />
+</head>
+<body>
+  <ul class='sidebar'>
+    
+      <li class="inactive">
+        <a href="./app-files.html">App Files &amp; Dirs</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./app-bundler.html">Bundler</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./configs.html">Config files</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cli-tools.html">CLI (console tools)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./database.html">Database</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-structures.html">N.*</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-wire.html">N.wire (message bus)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./n-live.html">N.live (realtime)</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules.html">Modules &amp; helpers</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-server.html">Modules - Server</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./modules-client.html">Modules - Client</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./requests.html">HTTP/RPC requests</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./env.html">env (in requests)</a>
+      </li>
+    
+      <li class="active">
+        <a href="./router.html">Router</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./cookies.html">Cookies</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./models.html">Models</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./settings.html">Settings</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./menus.html">Menus</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./debugging.html">Debug</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./notifications.html">Notifications</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./testing.html">Testing</a>
+      </li>
+    
+      <li class="inactive">
+        <a href="./i18n.html">i18n</a>
+      </li>
+    
+  </ul>
+  <div class="content">
+    <div class="page-header">
+      <h1>Router</h1>
+    </div>
+    <p>For server and client purposes we use <a href="https://github.com/nodeca/pointer">Pointer</a> router.
+Routes are described in YAML and bundled into main api tree file as
+<code>N.config.router</code> after init. Router instanse is accessible as
+<code>N.runtime.router</code>.</p>
+<p>Router config for the client is kept under <code>N.runtime.client_routes</code>.</p>
+<h2 id="application-routes">Application Routes</h2>
+<p>Application routes are defined in <code>router</code> section of config files:</p>
+<pre class="highlight"><code class="hljs no-highlight">router:
+  http.get:
+    forums.list:
+      &quot;/f{forum_id}/&quot;:
+        forum_id: /\d+/
+      &quot;/f{forum_id}/index({page}).html&quot;:
+        forum_id: /\d+/
+        page:
+          match: /[2-9]|[1-9]\d+/
+          default: 1
+
+    forums.threads.show:
+      &quot;/f{forum_id}/thread{thread_id}(-{page}).html&quot;:
+        forum_id: /\d+/
+        thread_id: /\d+/
+        page:
+          match: /[2-9]|[1-9]\d+/
+          default: 1
+
+    forums.threads.redirect:
+      &quot;/f{forum_id}/thread{thread_id}-{goto}.html&quot;:
+        forum_id: /\d+/
+        thread_id: /\d+/
+        goto: /new-post|last-post/
+
+    search:
+      &quot;/search/&quot;: ~
+</code></pre>
+<p>All routes are splitted into groups by responders they are related.
+That groups may be specialized by dot-separated list of HTTP methods.
+In the above example there is the only responder <code>http</code> with <code>get</code> method.
+It means that declared routes will be served by <code>http</code> responder and only for
+GET HTTP method. Method names in the config must be lowercased. <code>get</code> method
+always implies <code>head</code> method as well.</p>
+<p><strong>NOTICE</strong>. Routes with leading <code>#</code> are used by clients ONLY.
+<strong>Not implemented yet</strong></p>
+<p><strong>SECURITY WARNING</strong>. NEVER make routes, that change application state.
+Such actions should go via rpc, that has CSRF protection. </p>
+<h3 id="route-params-options">Route Params Options</h3>
+<p>Optional:</p>
+<ul>
+<li><strong>match</strong> (Optional) Rule to match value of param, <code>Array</code> or <code>RegExp</code>.</li>
+<li><strong>default</strong> (Optional) Default value of param.</li>
+</ul>
+<p>See example above and <a href="http://nodeca.github.com/pointer/#Route.new">Pointer</a> <code>new Route</code> documentation
+of <code>params</code> options.</p>
+<h3 id="slugs">Slugs</h3>
+<p>Routes can contain slugs. Technically, that&#39;s usual optional params.</p>
+<pre class="highlight"><code class="hljs no-highlight">router:
+  http.get:
+    faq.post.show:
+      &quot;/qa/({categoryslug}/){post_id}(-{postslug}).html&quot;: ~
+</code></pre>
+<p>The route above will match any of the following URLs:</p>
+<pre class="highlight"><code class="hljs no-highlight">/qa/123.html
+/qa/123-pochemu-krokodil-zelyoni.html
+/qa/animals/123-pochemu-krokodil-zelyoni.html
+</code></pre>
+<p>Recommended behavior for app developers is to redirect all non-full url&#39;s
+with 302 code. This can be done with <code>before</code> filter. Note, that it&#39;s a good
+idea to cache full url (or md5) - to avoid recalculations on every request.</p>
+<p><strong>CAUTION</strong>. NEVER route http methods, that posts data. That will
+cause CSRF vulnerability. <strong>ONCE AGAIN</strong>. Only give  access to http &quot;read&quot;
+methods, that will not modify data. Posting should be done ONLY via rpc
+call, when user click on links, buttons, and so on. </p>
+<h3 id="overrides">Overrides</h3>
+<p>If you are not satisfied with defaul routes, you can wish to override those at
+application-level config. Any config object can have special key
+<code>~override: true</code>. When such key found, branches from other configs will be
+wiped. Without this key, objects are reqursively merged.</p>
+<pre class="highlight"><code class="hljs no-highlight">router:
+  http.get:
+    forums.list:
+      ~override: true
+      &quot;/forum{forum_id}/&quot;:
+        page: /[01]/
+        forum_id: /\d+/
+    # ...
+</code></pre>
+<h2 id="mounting-and-binding-applications">Mounting (and binding) applications</h2>
+<p>Mounting (and binding) of applications is described in <code>bind</code> section of config
+files. It has <em>API path</em> as key and options of it&#39;s binding as values, e.g.:</p>
+<pre class="highlight"><code class="hljs less"><span class="hljs-attribute">bind</span>:
+  <span class="hljs-attribute">default</span>:
+    <span class="hljs-attribute">listen</span>: <span class="hljs-number">0.0</span>.<span class="hljs-number">0.0</span>:<span class="hljs-number">3000</span>
+
+  <span class="hljs-attribute">forums</span>:
+    <span class="hljs-attribute">mount</span>: /forum
+</code></pre><p>Options are Objects of key-value pairs. All parts are optional:</p>
+<ul>
+<li><strong>listen</strong> (String): Which <code>address[:port = 80]</code> we should listen. It is
+useful when you want to bind different parts of application on different
+interfaces, e.g. use SSL for users only, or separate interface for assets.</li>
+<li><strong>mount</strong> (String): Mount point given in form of <code>[proto:][//[host][:port]][/path]</code>,
+all parts are optional. You can use any combination. Examples:<ul>
+<li><code>https://users.nodeca.org</code>:
+mount to the root of <code>users.ndoca.org</code> host using HTTPS protocol only.</li>
+<li><code>//beta.nodeca.org:3000</code>:
+mount to the root of <code>beta.ndoca.org:3000</code> host using any protocol.</li>
+<li><code>/forum</code>:
+mount to the <code>/forum</code> path of any host using any protocol.</li>
+<li><code>//dev.nodeca.org:3000/users</code>:
+mount to the <code>/users</code> path of <code>dev.nodeca.org:3000</code> host using any protocol.</li>
+<li><code>//:3000/</code>
+mount to the root of any host and any protocol at 3000 port.</li>
+<li><code>http:/forum</code>
+mount to the <code>/forum</code> at <code>http</code> protocol of any host and port.</li>
+</ul>
+</li>
+<li><strong>ssl</strong> (Object): Contains paths to <code>key</code> and <code>cert</code> files. Paths are
+relative to the main app root, but you may specify <em>absolute</em> pathname that
+starts with a leading slash. You also can use <em>one</em> file (*.pem) as either
+<code>key</code> and <code>cert</code> - just concatenate them using a text editor.</li>
+</ul>
+<h3 id="https">HTTPS</h3>
+<p>As you can see above you can make nodeca start SSL server. Here&#39;s an example
+configuration that starts an https server on 443 port:</p>
+<pre class="highlight"><code class="hljs less"><span class="hljs-attribute">bind</span>:
+  <span class="hljs-attribute">default</span>:
+    <span class="hljs-attribute">listen</span>: <span class="hljs-number">0.0</span>.<span class="hljs-number">0.0</span>:<span class="hljs-number">443</span>
+    <span class="hljs-attribute">mount</span>:  <span class="hljs-attribute">https</span>:<span class="hljs-comment">//dev.nodeca.org</span>
+    <span class="hljs-attribute">ssl</span>:
+      <span class="hljs-attribute">key</span>:  ./etc/server.key
+      <span class="hljs-attribute">cert</span>: ./etc/server.cert
+</code></pre><p>You may also want to use stunnel for HTTPS while running nodeca application in
+normal mode, for this purposes you MUST NOT specify <code>ssl</code> option, and provide
+only a protocol-specific mount point:</p>
+<pre class="highlight"><code class="hljs less"><span class="hljs-attribute">bind</span>:
+  <span class="hljs-attribute">default</span>:
+    <span class="hljs-attribute">listen</span>: <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">3000</span>
+    <span class="hljs-attribute">mount</span>:  <span class="hljs-attribute">https</span>:<span class="hljs-comment">//dev.nodeca.org</span>
+</code></pre><h4 id="generating-self-signed-sslcertificate">Generating self-signed SSLcertificate</h4>
+<pre class="highlight"><code class="hljs bash">openssl genrsa -des3 -out server.key <span class="hljs-number">1024</span>
+openssl req -new -key server.key -out server.csr
+
+cp server.key server.key.orig
+openssl rsa -in server.key.orig -out server.key
+
+openssl x509 -req -days <span class="hljs-number">365</span> -in server.csr \
+        -signkey server.key -out server.cert
+</code></pre>
+<h3 id="fallbacks">Fallbacks</h3>
+<p>You can mount/bind any part of N.wire&#39;s <code>server:**</code> channel, even serve
+<code>forum.posts</code> and <code>forum.threads</code> by different address:port points.</p>
+<p>When you specify mount/bind options for <code>forum</code> and <code>forum.posts</code>, the last one
+will use options of <code>forum</code> as &quot;defaults&quot;. In this case we can describe the way
+of fallbacks as follows:</p>
+<p>   bind[&#39;default&#39;] + bind[&#39;forum&#39;] + bind[&#39;forum.posts&#39;]</p>
+<h4 id="default-mount-binding-point">Default mount/binding point</h4>
+<p>You can use <code>default</code> bind-level key to describe &quot;default&quot; fallback mount point.
+Options of this case are used as &quot;defaults&quot; for all server methods and take
+place, when method has no mount/bind options:</p>
+<pre class="highlight"><code class="hljs less"><span class="hljs-attribute">default</span>:
+  <span class="hljs-attribute">listen</span>: <span class="hljs-number">0.0</span>.<span class="hljs-number">0.0</span>:<span class="hljs-number">80</span>
+
+<span class="hljs-attribute">forum</span>:
+  <span class="hljs-attribute">mount</span>: /forum
+
+#
+# equals <span class="hljs-attribute">to</span>:
+#
+
+<span class="hljs-attribute">default</span>:
+  <span class="hljs-attribute">listen</span>: <span class="hljs-number">0.0</span>.<span class="hljs-number">0.0</span>:<span class="hljs-number">80</span>
+
+<span class="hljs-attribute">forum</span>:
+  <span class="hljs-attribute">listen</span>: <span class="hljs-number">0.0</span>.<span class="hljs-number">0.0</span>:<span class="hljs-number">80</span>
+  <span class="hljs-attribute">mount</span>: /forum
+</code></pre><h3 id="handling-invalid-hosts">Handling invalid hosts</h3>
+<p>There is a <em>special case</em> bind-level key <code>_</code> for the <em>invalid hosts</em> handler:</p>
+<pre class="highlight"><code class="hljs scilab">bind:
+  _: !!js/<span class="hljs-function"><span class="hljs-keyword">function</span> |</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(req, res)</span> {</span>
+      <span class="hljs-transposed_variable">res.</span>writeHead(<span class="hljs-number">404</span>, { <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'text/plain'</span> });
+      <span class="hljs-transposed_variable">res.</span><span class="hljs-keyword">end</span>(<span class="hljs-string">'Invalid host '</span> + <span class="hljs-transposed_variable">req.</span><span class="hljs-transposed_variable">headers.</span>host);
+    }
+</code></pre>
+    <script defer="defer"  src="./vendor/jquery.js"></script><script defer="defer"  src="./scripts/script.js"></script>
+  </div>
+</body>
+</html>
